@@ -112,8 +112,6 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
                 giveTagCompound(stack);
             }
 
-            System.out.println(stack.getOrCreateTag());
-
             if (getBurnTime(stack) < 0) {
                 setBurnTime(stack, 0);
             }
@@ -179,7 +177,6 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     protected void openGui(Player player, String key, ItemStack stack) {
-        System.out.println(stack);
 
         NetworkHooks.openScreen((ServerPlayer)player, new MenuProvider() {
             @Nonnull

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "inventorygenerators",
+  "key": {
+    "r": {
+      "tag": "forge:dusts/redstone"
+    },
+    "p": {
+      "tag": "minecraft:purpur_block"
+    },
+    "e": {
+      "item": "minecraft:end_rod"
+    },
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    }
+  },
+  "pattern": [
+    "ppp",
+    "pep",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_halitosis_generator"
+  },
+  "show_notification": true
+}
