@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "inventorygenerators:item/no_effect_upgrade"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "inventorygenerators:item/inventory_nether_star_generator_on"
+  }
+}

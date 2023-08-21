@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": {
+    "minecraft:pink_dye" : [10, 40],
+    "minecraft:pink_bed" : [10, 40],
+    "minecraft:pink_wool" : [10, 40],
+    "minecraft:pink_tulip": [10, 40] ,
+    "minecraft:pink_carpet": [10, 40],
+    "minecraft:pink_banner": [10, 40],
+    "minecraft:pink_candle": [10, 40],
+    "minecraft:pink_concrete": [10, 40],
+    "minecraft:pink_shulker_box": [10, 40],
+    "minecraft:pink_stained_glass": [10, 40],
+    "minecraft:pink_concrete_powder": [10, 40],
+    "minecraft:pink_stained_glass_pane": [10, 40],
+    "minecraft:pink_terracotta": [10, 40],
+    "minecraft:pink_glazed_terracotta": [10, 40],
+    "minecraft:pink_petals": [10, 40]
+  }
+}

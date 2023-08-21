@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": {
+    "minecraft:potion": [80, 80],
+    "minecraft:splash_potion": [160, 160],
+    "minecraft:lingering_potion": [320, 320]
+  }
+}

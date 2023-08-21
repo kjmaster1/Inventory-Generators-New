@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": {
+    "minecraft:bone_block": [400, 120],
+    "minecraft:bone": [400, 40],
+    "minecraft:rotten_flesh": [400, 20],
+    "minecraft:player_head": [400, 150],
+    "minecraft:zombie_head": [400, 150],
+    "minecraft:dragon_head": [400, 150],
+    "minecraft:creeper_head": [400, 150],
+    "minecraft:piglin_head": [400, 150],
+    "minecraft:skeleton_skull": [400, 150],
+    "minecraft:wither_skeleton_skull": [400, 150]
+  }
+}

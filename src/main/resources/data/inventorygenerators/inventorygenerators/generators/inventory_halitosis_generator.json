@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": {
+    "minecraft:dragon_breath": [12000, 40]
+  }
+}

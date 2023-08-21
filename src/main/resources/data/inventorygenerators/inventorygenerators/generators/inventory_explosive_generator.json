@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": {
+    "minecraft:gunpowder": [400, 40],
+    "minecraft:tnt": [3200, 40]
+  }
+}

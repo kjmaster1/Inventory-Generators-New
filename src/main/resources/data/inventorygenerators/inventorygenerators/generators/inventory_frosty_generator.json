@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": {
+    "minecraft:ice": [400, 40],
+    "minecraft:packed_ice": [400, 40],
+    "minecraft:snow": [500, 2],
+    "minecraft:snow_block": [400, 20],
+    "minecraft:powder_snow_bucket": [400, 40]
+  }
+}
