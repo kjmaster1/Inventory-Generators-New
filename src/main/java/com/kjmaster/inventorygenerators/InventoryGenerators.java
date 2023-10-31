@@ -24,23 +24,19 @@ import java.util.function.Supplier;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(InventoryGenerators.MODID)
-public class InventoryGenerators
-{
+public class InventoryGenerators {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "inventorygenerators";
-    // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     @SuppressWarnings("PublicField")
     public static final ModSetup setup = new ModSetup();
-
+    // Directly reference a slf4j logger
+    private static final Logger LOGGER = LogUtils.getLogger();
     @SuppressWarnings("PublicField")
     public static InventoryGenerators instance;
 
     private final Modules modules = new Modules();
 
-    public InventoryGenerators()
-    {
+    public InventoryGenerators() {
         instance = this;
         setupModules();
 
@@ -64,7 +60,7 @@ public class InventoryGenerators
     }
 
     public static <T extends Item> Supplier<T> tab(Supplier<T> supplier) {
-        return instance.setup.tab(supplier);
+        return setup.tab(supplier);
     }
 
     private void setupModules() {

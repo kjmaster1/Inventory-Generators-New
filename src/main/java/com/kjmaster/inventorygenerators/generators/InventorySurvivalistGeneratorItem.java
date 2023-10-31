@@ -3,7 +3,8 @@ package com.kjmaster.inventorygenerators.generators;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
 
-import static com.kjmaster.inventorygenerators.setup.Config.*;
+import static com.kjmaster.inventorygenerators.setup.Config.survivalistGeneratorCapacity;
+import static com.kjmaster.inventorygenerators.setup.Config.survivalistGeneratorRfPerTick;
 
 public class InventorySurvivalistGeneratorItem extends InventoryGeneratorItem {
 
@@ -31,7 +32,7 @@ public class InventorySurvivalistGeneratorItem extends InventoryGeneratorItem {
     public int calculatePower(ItemStack stack) {
 
         if (ForgeHooks.getBurnTime(getCurrentFuel(stack), null) > 0) {
-            return Math.min(getMaxEnergyStored(stack) - getInternalEnergyStored(stack),  survivalistGeneratorRfPerTick);
+            return Math.min(getMaxEnergyStored(stack) - getInternalEnergyStored(stack), survivalistGeneratorRfPerTick);
         }
         return super.calculatePower(stack);
     }

@@ -34,7 +34,7 @@ public class InventoryFurnaceGeneratorItem extends InventoryGeneratorItem {
     public int calculatePower(ItemStack stack) {
 
         if (ForgeHooks.getBurnTime(getCurrentFuel(stack), null) > 0) {
-            return Math.min(getMaxEnergyStored(stack) - getInternalEnergyStored(stack),  furnaceGeneratorRfPerTick);
+            return Math.min(getMaxEnergyStored(stack) - getInternalEnergyStored(stack), furnaceGeneratorRfPerTick);
         }
         return super.calculatePower(stack);
     }

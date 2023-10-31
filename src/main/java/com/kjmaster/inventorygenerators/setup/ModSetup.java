@@ -5,7 +5,6 @@ import com.kjmaster.kjlib.setup.DefaultModSetup;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.network.NetworkRegistry;
 
 public class ModSetup extends DefaultModSetup {
 

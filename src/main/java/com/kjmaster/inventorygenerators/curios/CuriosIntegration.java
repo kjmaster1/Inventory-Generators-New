@@ -3,7 +3,6 @@ package com.kjmaster.inventorygenerators.curios;
 import com.kjmaster.inventorygenerators.generators.InventoryGeneratorModule;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.PlayerInvWrapper;
@@ -13,15 +12,16 @@ import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
 public class CuriosIntegration {
-    @SuppressWarnings("EmptyMethod") public static void load() {}
-
     private static final String MODID = "curios";
     private static final String SLOT_ID = "inventory_generators";
+
+    @SuppressWarnings("EmptyMethod")
+    public static void load() {
+    }
 
     public static boolean hasMod() {
         return ModList.get().isLoaded(MODID);
@@ -59,7 +59,8 @@ public class CuriosIntegration {
     }
 
     private static final class Integrator {
-        private Integrator() {}
+        private Integrator() {
+        }
 
         private static ArrayList<IItemHandlerModifiable> getCuriosInventory(Player player) {
             ArrayList<IItemHandlerModifiable> stacksHandlers = new ArrayList<>();

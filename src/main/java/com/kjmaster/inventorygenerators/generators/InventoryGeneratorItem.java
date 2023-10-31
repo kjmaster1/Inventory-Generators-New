@@ -43,7 +43,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkHooks;
@@ -57,7 +56,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.kjmaster.inventorygenerators.setup.Config.*;
+import static com.kjmaster.inventorygenerators.setup.Config.doSendEnergy;
+import static com.kjmaster.inventorygenerators.setup.Config.doSideEffects;
 
 public abstract class InventoryGeneratorItem extends BaseItem implements IInventoryGenerator, IEnergyItem {
 
@@ -67,6 +67,15 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         super(new Item.Properties()
                 .stacksTo(1));
         this.generatorName = generatorName;
+    }
+
+    public static void initOverrides(InventoryGeneratorItem item) {
+        ItemProperties.register(item, new ResourceLocation(InventoryGenerators.MODID, "on"), (stack, worldIn, entityIn, integer) -> {
+            if (stack.getItem() instanceof IInventoryGenerator inventoryGenerator) {
+                return inventoryGenerator.isOn(stack) && (inventoryGenerator.getBurnTime(stack) > 0) ? 1 : 0;
+            }
+            return 0;
+        });
     }
 
     @Override
@@ -129,7 +138,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
                     handleFuel(stack, inv);
 
                     for (int i = 0; i <= numSpeedUpgrades; i++) {
-                         handleEnergy(stack, inventoryGenerator, player);
+                        handleEnergy(stack, inventoryGenerator, player);
                     }
 
                     if (inv.getStackInSlot(3).isEmpty() && hasSideEffect() && doSideEffects && getBurnTime(stack) > 0 && !(getInternalEnergyStored(stack) == getMaxEnergyStored(stack))) {
@@ -178,7 +187,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
 
     protected void openGui(Player player, String key, ItemStack stack) {
 
-        NetworkHooks.openScreen((ServerPlayer)player, new MenuProvider() {
+        NetworkHooks.openScreen((ServerPlayer) player, new MenuProvider() {
             @Nonnull
             @Override
             public Component getDisplayName() {
@@ -251,56 +260,6 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         return invEnergyProvider;
     }
 
-    class InvEnergyProvider extends ItemCapabilityProvider implements ICapabilitySerializable<Tag> {
-
-        public final LazyOptional<GenericItemHandler> inv = LazyOptional.of(this::createInventory);
-        public final ItemStack stack;
-
-        private <T> @NotNull GenericItemHandler createInventory() {
-            return GenericItemHandler.create(null, InventoryGeneratorContainer.CONTAINER_FACTORY).build();
-        }
-
-        public InvEnergyProvider(ItemStack itemStack, IEnergyItem item) {
-            super(itemStack, item);
-            this.stack = itemStack;
-        }
-
-        @NotNull
-        @Override
-        public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-            return this.getCapability(cap);
-        }
-
-        @NotNull
-        @Override
-        public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability) {
-            if (capability == ForgeCapabilities.ITEM_HANDLER) {
-                return this.inv.cast();
-            }
-            if (capability == ForgeCapabilities.ENERGY) {
-                return this.energy.cast();
-            }
-            return LazyOptional.empty();
-        }
-
-        @Override
-        public Tag serializeNBT() {
-            GenericItemHandler handler = inv.orElse(createInventory());
-            stack.getOrCreateTag().put("Inventory", handler.serializeNBT());
-            return handler.serializeNBT();
-        }
-
-        @Override
-        public void deserializeNBT(Tag nbt) {
-            GenericItemHandler handler = inv.orElse(createInventory());
-            CompoundTag tag = stack.getOrCreateTag();
-            nbt = tag.get("Inventory");
-            if (nbt instanceof ListTag listTag) {
-                handler.deserializeNBT(listTag);
-            }
-        }
-    }
-
     @Override
     public ArrayList<ItemStack> getChargeables(Player player) {
         ArrayList<ItemStack> chargeables = new ArrayList<>();
@@ -309,7 +268,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
             ItemStack invStack = inventory.getStackInSlot(i);
             LazyOptional<IEnergyStorage> energyStorageLazyOptional = invStack.getCapability(ForgeCapabilities.ENERGY);
             energyStorageLazyOptional.ifPresent((energyStorage) -> {
-                if (energyStorage.canReceive() &&  (energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored())) {
+                if (energyStorage.canReceive() && (energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored())) {
                     chargeables.add(invStack);
                 }
             });
@@ -382,7 +341,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
                 minSend = timeAndRF.get(1);
             }
         }
-        return Math.min(getMaxEnergyStored(stack) - getInternalEnergyStored(stack),  minSend);
+        return Math.min(getMaxEnergyStored(stack) - getInternalEnergyStored(stack), minSend);
     }
 
     @Override
@@ -527,7 +486,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
 
     @Override
     public long extractEnergyL(ItemStack itemStack, long l, boolean b) {
-        return this.extractEnergy(itemStack, (int)l, b);
+        return this.extractEnergy(itemStack, (int) l, b);
     }
 
     public int getMaxEnergyStored(ItemStack container) {
@@ -592,12 +551,53 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         return isInChargingMode(pStack);
     }
 
-    public static void initOverrides(InventoryGeneratorItem item) {
-        ItemProperties.register(item, new ResourceLocation(InventoryGenerators.MODID, "on"), (stack, worldIn, entityIn, integer) -> {
-            if (stack.getItem() instanceof IInventoryGenerator inventoryGenerator) {
-                return inventoryGenerator.isOn(stack) && (inventoryGenerator.getBurnTime(stack) > 0) ? 1 : 0;
+    class InvEnergyProvider extends ItemCapabilityProvider implements ICapabilitySerializable<Tag> {
+
+        public final LazyOptional<GenericItemHandler> inv = LazyOptional.of(this::createInventory);
+        public final ItemStack stack;
+
+        public InvEnergyProvider(ItemStack itemStack, IEnergyItem item) {
+            super(itemStack, item);
+            this.stack = itemStack;
+        }
+
+        private <T> @NotNull GenericItemHandler createInventory() {
+            return GenericItemHandler.create(null, InventoryGeneratorContainer.CONTAINER_FACTORY).build();
+        }
+
+        @NotNull
+        @Override
+        public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+            return this.getCapability(cap);
+        }
+
+        @NotNull
+        @Override
+        public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability) {
+            if (capability == ForgeCapabilities.ITEM_HANDLER) {
+                return this.inv.cast();
             }
-            return 0;
-        });
+            if (capability == ForgeCapabilities.ENERGY) {
+                return this.energy.cast();
+            }
+            return LazyOptional.empty();
+        }
+
+        @Override
+        public Tag serializeNBT() {
+            GenericItemHandler handler = inv.orElse(createInventory());
+            stack.getOrCreateTag().put("Inventory", handler.serializeNBT());
+            return handler.serializeNBT();
+        }
+
+        @Override
+        public void deserializeNBT(Tag nbt) {
+            GenericItemHandler handler = inv.orElse(createInventory());
+            CompoundTag tag = stack.getOrCreateTag();
+            nbt = tag.get("Inventory");
+            if (nbt instanceof ListTag listTag) {
+                handler.deserializeNBT(listTag);
+            }
+        }
     }
 }

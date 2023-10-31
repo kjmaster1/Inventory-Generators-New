@@ -23,7 +23,7 @@
       "model": "inventorygenerators:item/inventory_halitosis_generator_on_3"
     },
     {
-	  "predicate": {
+      "predicate": {
         "inventorygenerators:on": 4
       },
       "model": "inventorygenerators:item/inventory_halitosis_generator_on_4"

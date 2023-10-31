@@ -13,11 +13,6 @@ public class InventoryHalitosisGeneratorItem extends InventoryGeneratorItem {
         super("inventory_halitosis_generator");
     }
 
-    @Override
-    public int getMaxEnergyStored(ItemStack container) {
-        return halitosisGeneratorCapacity;
-    }
-
     public static void initOverrides(InventoryGeneratorItem item) {
         ItemProperties.register(item, new ResourceLocation(InventoryGenerators.MODID, "on"), (stack, worldIn, entityIn, integer) -> {
             if (stack.getItem() instanceof IInventoryGenerator inventoryGenerator) {
@@ -37,5 +32,10 @@ public class InventoryHalitosisGeneratorItem extends InventoryGeneratorItem {
             }
             return 0;
         });
+    }
+
+    @Override
+    public int getMaxEnergyStored(ItemStack container) {
+        return halitosisGeneratorCapacity;
     }
 }

@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": {
-    "minecraft:nether_star": [2400, 4000]
+    "minecraft:nether_star": [
+      2400,
+      4000
+    ]
   }
 }

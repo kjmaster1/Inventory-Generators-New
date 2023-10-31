@@ -10,7 +10,7 @@
       "tag": "forge:ingots/iron"
     },
     "s": {
-      "item": "minecraft:inventory_survivalist_generator"
+      "item": "inventorygenerators:inventory_survivalist_generator"
     },
     "f": {
       "item": "minecraft:furnace"

@@ -12,24 +12,20 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class InventoryGeneratorManager extends SimpleJsonResourceReloadListener {
 
+    public static final InventoryGeneratorManager INSTANCE = new InventoryGeneratorManager();
     private static final Gson GSON =
             (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
-
-    public static final InventoryGeneratorManager INSTANCE = new InventoryGeneratorManager();
-
+    public Map<String, Map<Item, List<Integer>>> generatorToItemConfiguration = new HashMap<>();
+    public Map<String, ArrayList<Item>> generatorToAllowedItems = new HashMap<>();
     public InventoryGeneratorManager() {
         super(GSON, "inventorygenerators/generators");
     }
-
-    public Map<String, Map<Item, List<Integer>>> generatorToItemConfiguration = new HashMap<>();
-    public Map<String, ArrayList<Item>> generatorToAllowedItems = new HashMap<>();
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> pObject, @NotNull ResourceManager pResourceManager, @NotNull ProfilerFiller pProfiler) {
@@ -47,7 +43,8 @@ public class InventoryGeneratorManager extends SimpleJsonResourceReloadListener 
 
             boolean replace = jsonObject.getAsJsonPrimitive("replace").getAsBoolean();
 
-            Map<String, List<Integer>> map = new Gson().fromJson(jsonObject.get("values"), new TypeToken<HashMap<String, List<Integer>>>(){}.getType());
+            Map<String, List<Integer>> map = new Gson().fromJson(jsonObject.get("values"), new TypeToken<HashMap<String, List<Integer>>>() {
+            }.getType());
 
             ArrayList<Item> allowedItems = new ArrayList<>();
             Map<Item, List<Integer>> itemToTimeAndRF = new HashMap<>();

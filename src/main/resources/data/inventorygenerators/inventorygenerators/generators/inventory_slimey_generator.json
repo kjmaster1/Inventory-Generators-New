@@ -1,7 +1,13 @@
 {
   "replace": false,
   "values": {
-    "minecraft:slimeball": [20, 40],
-    "minecraft:slime_block": [20, 360]
+    "minecraft:slimeball": [
+      20,
+      40
+    ],
+    "minecraft:slime_block": [
+      20,
+      360
+    ]
   }
 }

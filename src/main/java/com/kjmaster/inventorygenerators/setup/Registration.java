@@ -22,15 +22,6 @@ public class Registration {
     public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-
-
-    public static void register() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ITEMS.register(bus);
-        CONTAINERS.register(bus);
-        TABS.register(FMLJavaModLoadingContext.get().getModEventBus());
-    }
-
     public static RegistryObject<CreativeModeTab> TAB = TABS.register("inventorygenerators", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + MODID))
             .icon(() -> new ItemStack(InventoryGeneratorModule.INVENTORY_FURNACE_GENERATOR.get()))
@@ -39,4 +30,11 @@ public class Registration {
                 InventoryGenerators.setup.populateTab(output);
             })
             .build());
+
+    public static void register() {
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        ITEMS.register(bus);
+        CONTAINERS.register(bus);
+        TABS.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
 }

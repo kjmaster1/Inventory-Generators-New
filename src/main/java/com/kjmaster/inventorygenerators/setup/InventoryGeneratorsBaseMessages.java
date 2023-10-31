@@ -15,6 +15,7 @@ public class InventoryGeneratorsBaseMessages {
     public static SimpleChannel INSTANCE;
 
     private static int packetId = 0;
+
     private static int id() {
         return packetId++;
     }

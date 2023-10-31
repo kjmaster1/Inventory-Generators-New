@@ -13,7 +13,9 @@ import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
@@ -76,13 +78,13 @@ public class InventoryExplosiveGeneratorItem extends InventoryGeneratorItem {
                     Set<BlockPos> set = Sets.newHashSet();
                     int i = 16;
 
-                    for(int j = 0; j < 16; ++j) {
-                        for(int k = 0; k < 16; ++k) {
-                            for(int l = 0; l < 16; ++l) {
+                    for (int j = 0; j < 16; ++j) {
+                        for (int k = 0; k < 16; ++k) {
+                            for (int l = 0; l < 16; ++l) {
                                 if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
-                                    double d0 = (double)((float)j / 15.0F * 2.0F - 1.0F);
-                                    double d1 = (double)((float)k / 15.0F * 2.0F - 1.0F);
-                                    double d2 = (double)((float)l / 15.0F * 2.0F - 1.0F);
+                                    double d0 = (float) j / 15.0F * 2.0F - 1.0F;
+                                    double d1 = (float) k / 15.0F * 2.0F - 1.0F;
+                                    double d2 = (float) l / 15.0F * 2.0F - 1.0F;
                                     double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
                                     d0 /= d3;
                                     d1 /= d3;
@@ -92,7 +94,7 @@ public class InventoryExplosiveGeneratorItem extends InventoryGeneratorItem {
                                     double d6 = this.getY();
                                     double d8 = this.getZ();
 
-                                    for(float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
+                                    for (float f1 = 0.3F; f > 0.0F; f -= 0.22500001F) {
                                         BlockPos blockpos = BlockPos.containing(d4, d6, d8);
                                         BlockState blockstate = this.level().getBlockState(blockpos);
                                         FluidState fluidstate = this.level().getFluidState(blockpos);
@@ -109,9 +111,9 @@ public class InventoryExplosiveGeneratorItem extends InventoryGeneratorItem {
                                             set.add(blockpos);
                                         }
 
-                                        d4 += d0 * (double)0.3F;
-                                        d6 += d1 * (double)0.3F;
-                                        d8 += d2 * (double)0.3F;
+                                        d4 += d0 * (double) 0.3F;
+                                        d6 += d1 * (double) 0.3F;
+                                        d8 += d2 * (double) 0.3F;
                                     }
                                 }
                             }
@@ -120,13 +122,13 @@ public class InventoryExplosiveGeneratorItem extends InventoryGeneratorItem {
 
                     explosion.getToBlow().addAll(set);
                     float f2 = 4.0f * 2.0F;
-                    int k1 = Mth.floor(this.getX() - (double)f2 - 1.0D);
-                    int l1 = Mth.floor(this.getX() + (double)f2 + 1.0D);
-                    int i2 = Mth.floor(this.getY() - (double)f2 - 1.0D);
-                    int i1 = Mth.floor(this.getY() + (double)f2 + 1.0D);
-                    int j2 = Mth.floor(this.getZ() - (double)f2 - 1.0D);
-                    int j1 = Mth.floor(this.getZ() + (double)f2 + 1.0D);
-                    List<Entity> list = this.level().getEntities(this, new AABB((double)k1, (double)i2, (double)j2, (double)l1, (double)i1, (double)j1));
+                    int k1 = Mth.floor(this.getX() - (double) f2 - 1.0D);
+                    int l1 = Mth.floor(this.getX() + (double) f2 + 1.0D);
+                    int i2 = Mth.floor(this.getY() - (double) f2 - 1.0D);
+                    int i1 = Mth.floor(this.getY() + (double) f2 + 1.0D);
+                    int j2 = Mth.floor(this.getZ() - (double) f2 - 1.0D);
+                    int j1 = Mth.floor(this.getZ() + (double) f2 + 1.0D);
+                    List<Entity> list = this.level().getEntities(this, new AABB(k1, i2, j2, l1, i1, j1));
                     net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.level(), explosion, list, f2);
                     Vec3 vec3 = new Vec3(this.getX(), this.getY(), this.getZ());
 
@@ -142,7 +144,7 @@ public class InventoryExplosiveGeneratorItem extends InventoryGeneratorItem {
                                     d5 /= d13;
                                     d7 /= d13;
                                     d9 /= d13;
-                                    double d14 = (double) getSeenPercent(vec3, entity);
+                                    double d14 = getSeenPercent(vec3, entity);
                                     double d10 = (1.0D - d12) * d14;
 
                                     // The single line that we actually care about

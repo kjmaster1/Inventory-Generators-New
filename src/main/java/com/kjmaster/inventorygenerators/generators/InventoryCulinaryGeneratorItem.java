@@ -49,7 +49,7 @@ public class InventoryCulinaryGeneratorItem extends InventoryGeneratorItem {
         Item fuel = getCurrentFuel(stack).getItem();
         FoodProperties foodProperties = fuel.getFoodProperties();
         if (foodProperties != null) {
-            return Math.min(getMaxEnergyStored(stack) - getInternalEnergyStored(stack),  getEnergyRate(foodProperties));
+            return Math.min(getMaxEnergyStored(stack) - getInternalEnergyStored(stack), getEnergyRate(foodProperties));
         }
         return super.calculatePower(stack);
     }
@@ -83,7 +83,7 @@ public class InventoryCulinaryGeneratorItem extends InventoryGeneratorItem {
             } else if (mobEffect == MobEffects.SATURATION) {
                 healAmount += (effectInstance.getAmplifier() + 1) / 2F;
             } else if (mobEffect == MobEffects.REGENERATION) {
-                healAmount += effectInstance.getDuration() / (float)(50 >> effectInstance.getAmplifier()) / 4F;
+                healAmount += effectInstance.getDuration() / (float) (50 >> effectInstance.getAmplifier()) / 4F;
             } else if (mobEffect == MobEffects.ABSORPTION) {
                 healAmount += (effectInstance.getAmplifier() + 1) / 2F;
             } else {

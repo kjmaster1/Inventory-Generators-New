@@ -1,7 +1,6 @@
 package com.kjmaster.inventorygenerators.upgrades;
 
 import com.kjmaster.kjlib.items.BaseItem;
-import com.kjmaster.kjlib.util.helpers.StringHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;

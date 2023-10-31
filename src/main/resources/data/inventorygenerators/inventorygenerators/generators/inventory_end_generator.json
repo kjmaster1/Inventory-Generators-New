@@ -1,7 +1,13 @@
 {
   "replace": false,
   "values": {
-    "minecraft:ender_pearl": [1600, 40],
-    "minecraft:ender_eye": [3200, 80]
+    "minecraft:ender_pearl": [
+      1600,
+      40
+    ],
+    "minecraft:ender_eye": [
+      3200,
+      80
+    ]
   }
 }

@@ -20,7 +20,7 @@ public class PacketChangeMode {
     }
 
     public void handle(SimpleChannel channel, Supplier<NetworkEvent.Context> supplier) {
-        NetworkEvent.Context ctx = (NetworkEvent.Context)supplier.get();
+        NetworkEvent.Context ctx = supplier.get();
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
             if (player != null) {

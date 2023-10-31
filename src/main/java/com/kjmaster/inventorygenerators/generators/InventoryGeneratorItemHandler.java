@@ -2,14 +2,13 @@ package com.kjmaster.inventorygenerators.generators;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 public class InventoryGeneratorItemHandler implements IItemHandlerModifiable {
 
-    private final IItemHandlerModifiable generatorInventory;
     final ItemStack generator;
+    private final IItemHandlerModifiable generatorInventory;
 
     public InventoryGeneratorItemHandler(ItemStack generator) {
         this.generator = generator;

@@ -33,6 +33,16 @@ public class InventoryGeneratorModule implements IModule {
 
     public static final RegistryObject<MenuType<InventoryGeneratorContainer>> CONTAINER_INVENTORY_GENERATOR = Registration.CONTAINERS.register("inventory_generator", InventoryGeneratorModule::createContainer);
 
+    private static MenuType<InventoryGeneratorContainer> createContainer() {
+        return IForgeMenuType.create((windowId, inv, data) -> {
+            Player player = inv.player;
+            ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
+            InventoryGeneratorContainer container = new InventoryGeneratorContainer(windowId, player.blockPosition(), player, stack);
+            container.setupInventories(new InventoryGeneratorItemHandler(stack), inv);
+            return container;
+        });
+    }
+
     @Override
     public void init(FMLCommonSetupEvent event) {
 
@@ -61,16 +71,6 @@ public class InventoryGeneratorModule implements IModule {
             if (CuriosIntegration.hasMod()) {
                 CuriosIntegration.curiosSetup();
             }
-        });
-    }
-
-    private static MenuType<InventoryGeneratorContainer> createContainer() {
-        return IForgeMenuType.create((windowId, inv, data) -> {
-            Player player = inv.player;
-            ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-            InventoryGeneratorContainer container = new InventoryGeneratorContainer(windowId, player.blockPosition(), player, stack);
-            container.setupInventories(new InventoryGeneratorItemHandler(stack), inv);
-            return container;
         });
     }
 }

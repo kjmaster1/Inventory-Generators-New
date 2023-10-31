@@ -35,7 +35,7 @@ public class InventoryOverclockedGeneratorItem extends InventoryGeneratorItem {
         if (ForgeHooks.getBurnTime(getCurrentFuel(stack), null) > 0) {
             int burnTime = ForgeHooks.getBurnTime(getCurrentFuel(stack), null);
             int minSend = Math.min(burnTime, overclockedGeneratorMinRfPerTick);
-            return Math.min(getMaxEnergyStored(stack) - getInternalEnergyStored(stack),  minSend);
+            return Math.min(getMaxEnergyStored(stack) - getInternalEnergyStored(stack), minSend);
         }
         return super.calculatePower(stack);
     }

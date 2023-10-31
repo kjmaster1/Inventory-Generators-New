@@ -1,5 +1,5 @@
 package com.kjmaster.inventorygenerators.generators;
-;
+
 import com.kjmaster.inventorygenerators.InventoryGenerators;
 import com.kjmaster.kjlib.gui.GenericGuiContainer;
 import com.kjmaster.kjlib.gui.ManualEntry;
@@ -19,7 +19,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -32,8 +31,8 @@ public class InventoryGeneratorGui extends GenericGuiContainer<GenericTileEntity
     private static final ResourceLocation texture = new ResourceLocation(InventoryGenerators.MODID, "textures/gui/container/generator.png");
 
     private final Component displayName;
-    public EnergyBar energyBar;
     private final InventoryGeneratorContainer container;
+    public EnergyBar energyBar;
 
     public InventoryGeneratorGui(Component textComponent, InventoryGeneratorContainer container, Inventory inventory) {
         super(null, container, inventory, new ManualEntry(new ResourceLocation(InventoryGenerators.MODID, "manual"), new ResourceLocation(InventoryGenerators.MODID, "inventory_generator"), 0));
