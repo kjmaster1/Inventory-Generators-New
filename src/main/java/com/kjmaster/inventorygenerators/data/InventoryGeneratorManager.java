@@ -19,12 +19,10 @@ import java.util.*;
 public class InventoryGeneratorManager extends SimpleJsonResourceReloadListener {
 
     public static final InventoryGeneratorManager INSTANCE = new InventoryGeneratorManager();
-    private static final Gson GSON =
-            (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
     public Map<String, Map<Item, List<Integer>>> generatorToItemConfiguration = new HashMap<>();
     public Map<String, ArrayList<Item>> generatorToAllowedItems = new HashMap<>();
     public InventoryGeneratorManager() {
-        super(GSON, "inventorygenerators/generators");
+        super((new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create(), "inventorygenerators/generators");
     }
 
     @Override
