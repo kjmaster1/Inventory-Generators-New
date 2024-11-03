@@ -9,6 +9,8 @@ import com.kjmaster.inventorygenerators.setup.Registration;
 import com.kjmaster.inventorygenerators.upgrades.UpgradesModule;
 import com.kjmaster.kjlib.modules.Modules;
 import com.mojang.logging.LogUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,6 +39,7 @@ public class InventoryGenerators {
     private final Modules modules = new Modules();
 
     public InventoryGenerators() {
+
         instance = this;
         setupModules();
 

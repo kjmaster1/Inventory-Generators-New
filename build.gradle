@@ -131,8 +131,15 @@ repositories {
         }
     }
 
+    maven { // JEI
+        url "https://maven.blamejared.com"
+    }
+
     maven {
         url = "https://maven.theillusivec4.top/"
+    }
+    maven {
+        url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
     }
 }
 
@@ -155,6 +162,10 @@ dependencies {
     // The group id is ignored when searching -- in this case, it is "blank"
     implementation fg.deobf("blank:kjlib-${minecraft_version}:${kjlib_version}")
 
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+
     runtimeOnly( fg.deobf( "curse.maven:cucumber-272335:4602089"))
     runtimeOnly( fg.deobf("curse.maven:ironjetpacks-284497:4602093"))
     // runtimeOnly( fg.deobf("curse.maven:scalacatsforce-320926:4646736"))
@@ -165,6 +176,8 @@ dependencies {
         runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
         compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
     }
+
+    runtimeOnly("me.djtheredstoner:DevAuth-forge-latest:1.2.0")
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

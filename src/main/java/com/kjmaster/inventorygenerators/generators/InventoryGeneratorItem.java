@@ -3,7 +3,6 @@ package com.kjmaster.inventorygenerators.generators;
 import com.kjmaster.inventorygenerators.InventoryGenerators;
 import com.kjmaster.inventorygenerators.curios.CuriosIntegration;
 import com.kjmaster.inventorygenerators.data.InventoryGeneratorManager;
-import com.kjmaster.inventorygenerators.keys.KeyBindings;
 import com.kjmaster.inventorygenerators.network.PacketSyncGeneratorEnergy;
 import com.kjmaster.inventorygenerators.setup.InventoryGeneratorsBaseMessages;
 import com.kjmaster.kjlib.container.GenericItemHandler;
@@ -54,7 +53,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.kjmaster.inventorygenerators.setup.Config.doSendEnergy;
 import static com.kjmaster.inventorygenerators.setup.Config.doSideEffects;
@@ -83,39 +81,41 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
 
         tooltip.add(Component.translatable("info.invgens." + generatorName).withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD));
 
+        addOnOffTooltips(stack, tooltip);
+        addModeTooltips(stack, tooltip);
+        addEnergyAndBurnTimeTooltips(stack, tooltip);
+    }
+
+    private void addOnOffTooltips(ItemStack stack, List<Component> tooltip) {
         if (isOn(stack)) {
             tooltip.add(StringHelper.getNoticeText("info.invgens.1"));
             tooltip.add(StringHelper.getDeactivationText("info.invgens.2"));
         } else {
             tooltip.add(StringHelper.getActivationText("info.invgens.3"));
         }
+    }
 
+    private void addModeTooltips(ItemStack stack, List<Component> tooltip) {
         if (isInChargingMode(stack)) {
             tooltip.add(StringHelper.getNoticeText("info.invgens.modeOn"));
         } else {
             tooltip.add(StringHelper.getNoticeText("info.invgens.modeOff"));
         }
+    }
 
-        AtomicInteger numSpeedUpgrades = new AtomicInteger();
-        stack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent((inv) -> {
-            ItemStack speedUpgradesStack = inv.getStackInSlot(1);
-            numSpeedUpgrades.set(speedUpgradesStack.getCount());
-        });
+    private void addEnergyAndBurnTimeTooltips(ItemStack stack, List<Component> tooltip) {
+        MutableComponent energyComponent = Component.literal(StringHelper.localize("info.invgens.charge") + ": " + StringHelper.getScaledNumber(getInternalEnergyStored(stack)))
+                .append(" / " + StringHelper.getScaledNumber(getMaxEnergyStored(stack)) + " RF");
+        tooltip.add(energyComponent);
 
-        MutableComponent mutableComponent = Component.literal(StringHelper.localize("info.invgens.mode", KeyBindings.changeMode.getKey().getDisplayName().getString()));
-        tooltip.add(mutableComponent);
-        MutableComponent mutableComponent1 = Component.literal(StringHelper.localize("info.invgens.charge") + ": " + StringHelper.getScaledNumber(getInternalEnergyStored(stack)));
-        mutableComponent1.append(" / " + StringHelper.getScaledNumber(getMaxEnergyStored(stack)) + " RF");
-        tooltip.add(mutableComponent1);
-        MutableComponent mutableComponent3 = Component.literal(StringHelper.localize("info.invgens.burnTimeLeft") + ": " + StringHelper.format(getBurnTime(stack)));
-        tooltip.add(mutableComponent3);
+        MutableComponent burnTimeComponent = Component.literal(StringHelper.localize("info.invgens.burnTimeLeft") + ": " + StringHelper.format(getBurnTime(stack)));
+        tooltip.add(burnTimeComponent);
     }
 
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level pLevel, @NotNull Entity entity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(stack, pLevel, entity, pSlotId, pIsSelected);
 
-        IInventoryGenerator inventoryGenerator = (IInventoryGenerator) stack.getItem();
         if (entity instanceof Player player && !pLevel.isClientSide) {
             if (!stack.hasTag()) {
                 giveTagCompound(stack);
@@ -138,50 +138,57 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
                     handleFuel(stack, inv);
 
                     for (int i = 0; i <= numSpeedUpgrades; i++) {
-                        handleEnergy(stack, inventoryGenerator, player);
+                        handleEnergy(stack, player);
                     }
 
-                    if (inv.getStackInSlot(3).isEmpty() && hasSideEffect() && doSideEffects && getBurnTime(stack) > 0 && !(getInternalEnergyStored(stack) == getMaxEnergyStored(stack))) {
+                    if (shouldGiveSideEffect(inv, stack)) {
                         giveSideEffect(player);
                     }
                 }
                 if (isInChargingMode(stack) && doSendEnergy) {
-                    handleCharging(stack, numSpeedUpgrades, inventoryGenerator, player);
+                    handleCharging(stack, numSpeedUpgrades, player);
                 }
             });
         }
     }
 
+    private boolean shouldGiveSideEffect(IItemHandler inv, ItemStack stack) {
+        return inv.getStackInSlot(3).isEmpty() && hasSideEffect() && doSideEffects && getBurnTime(stack) > 0 && getInternalEnergyStored(stack) < getMaxEnergyStored(stack);
+    }
+
     private void handleFuel(ItemStack stack, IItemHandler inv) {
         if (getBurnTime(stack) <= 0 && !getFuel(stack).isEmpty()
-                && !(getInternalEnergyStored(stack) == getMaxEnergyStored(stack))) {
+                && getInternalEnergyStored(stack) < getMaxEnergyStored(stack)) {
             ItemStack fuel = getFuel(stack);
             setBurnTime(stack, calculateTime(fuel));
             setCurrentFuel(stack, fuel);
-            fuel.shrink(1);
-            if (fuel.getItem() instanceof PotionItem && fuel.getCount() == 1) {
-                inv.insertItem(0, new ItemStack(Items.GLASS_BOTTLE, 1), false);
-            }
-            if (fuel.getItem().equals(Items.LAVA_BUCKET) || fuel.getItem().equals(Items.WATER_BUCKET)) {
-                inv.insertItem(0, new ItemStack(Items.BUCKET, 1), false);
-            }
+            consumeFuel(fuel, inv);
         }
     }
 
-    private void handleEnergy(ItemStack stack, IInventoryGenerator inventoryGenerator, Player player) {
-        if (!(getInternalEnergyStored(stack) == getMaxEnergyStored(stack)) && getBurnTime(stack) > 0) {
+    private void consumeFuel(ItemStack fuel, IItemHandler inv) {
+        fuel.shrink(1);
+        if (fuel.getItem() instanceof PotionItem && fuel.getCount() == 1) {
+            inv.insertItem(0, new ItemStack(Items.GLASS_BOTTLE), false);
+        } else if (fuel.getItem() == Items.LAVA_BUCKET || fuel.getItem() == Items.WATER_BUCKET) {
+            inv.insertItem(0, new ItemStack(Items.BUCKET), false);
+        }
+    }
+
+    private void handleEnergy(ItemStack stack, Player player) {
+        if (getInternalEnergyStored(stack) < getMaxEnergyStored(stack) && getBurnTime(stack) > 0) {
             setBurnTime(stack, getBurnTime(stack) - 1);
             int rfToGive = calculatePower(stack);
             receiveInternalEnergy(stack, rfToGive);
-            sendSyncPacket(stack, inventoryGenerator, player);
+            sendSyncPacket(stack, player);
         }
     }
 
-    private void handleCharging(ItemStack stack, int numSpeedUpgrades, IInventoryGenerator inventoryGenerator, Player player) {
+    private void handleCharging(ItemStack stack, int numSpeedUpgrades, Player player) {
         for (int i = 0; i <= numSpeedUpgrades; i++) {
             ArrayList<ItemStack> chargeables = getChargeables(player);
             giveEnergyToChargeables(chargeables, stack);
-            sendSyncPacket(stack, inventoryGenerator, player);
+            sendSyncPacket(stack, player);
         }
     }
 
@@ -202,12 +209,10 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
             }
         });
 
-        if (stack.getItem() instanceof IInventoryGenerator inventoryGenerator) {
-            sendSyncPacket(stack, inventoryGenerator, player);
-        }
+        sendSyncPacket(stack, player);
     }
 
-    protected void sendSyncPacket(@NotNull ItemStack stack, IInventoryGenerator inventoryGenerator, Player player) {
+    protected void sendSyncPacket(@NotNull ItemStack stack, Player player) {
         FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(Unpooled.buffer());
         friendlyByteBuf.writeInt(getInternalEnergyStored(stack));
         if (player instanceof ServerPlayer serverPlayer) {
@@ -232,7 +237,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
         if (Objects.requireNonNull(pPlayer).isCrouching()) {
             turnOn(pPlayer.getItemInHand(pUsedHand));
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, pPlayer.getItemInHand(pUsedHand));
@@ -480,6 +485,21 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     @Override
+    public boolean isBarVisible(@NotNull ItemStack stack) {
+        return getInternalEnergyStored(stack) < getMaxEnergyStored(stack);
+    }
+
+    @Override
+    public int getBarWidth(@NotNull ItemStack stack) {
+        return (int) (13.0F * ((float) getInternalEnergyStored(stack) / (float) getMaxEnergyStored(stack)));
+    }
+
+    @Override
+    public int getBarColor(@NotNull ItemStack stack) {
+        return 0x00FF00; // Green color
+    }
+
+    @Override
     public long receiveEnergyL(ItemStack itemStack, long l, boolean b) {
         return 0;
     }
@@ -530,10 +550,6 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         return energyExtracted;
     }
 
-    public int getReceive() {
-        return 0;
-    }
-
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged) && (slotChanged
@@ -541,12 +557,12 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
+    public boolean isEnchantable(@NotNull ItemStack stack) {
         return false;
     }
 
     @Override
-    public boolean isFoil(ItemStack pStack) {
+    public boolean isFoil(@NotNull ItemStack pStack) {
         super.isFoil(pStack);
         return isInChargingMode(pStack);
     }
