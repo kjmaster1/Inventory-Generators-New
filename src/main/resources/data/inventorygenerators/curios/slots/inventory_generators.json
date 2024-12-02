@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "size": 2,
+  "operation": "SET",
+  "order": 700,
+  "add_cosmetic": true,
+  "use_native_gui": true,
+  "render_toggle": true
+}

@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_potion_generator"
+  },
+  "fuels": [
+    {
+      "item": "minecraft:lingering_potion"
+    }
+  ],
+  "burnTime": 320,
+  "RF": 320
+}

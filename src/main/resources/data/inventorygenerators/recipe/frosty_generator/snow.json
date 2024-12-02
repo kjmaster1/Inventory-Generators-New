@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_frosty_generator"
+  },
+  "fuels": [
+    {
+      "item": "minecraft:snow"
+    }
+  ],
+  "burnTime": 500,
+  "RF": 2
+}

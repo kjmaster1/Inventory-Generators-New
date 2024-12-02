@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_end_generator"
+  },
+  "fuels": [
+    {
+      "tag": "c:ender_pearls"
+    }
+  ],
+  "burnTime": 1600,
+  "RF": 40
+}

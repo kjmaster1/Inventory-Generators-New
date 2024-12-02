@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "inventorygenerators",
+  "key": {
+    "r": {
+      "tag": "c:dusts/redstone"
+    },
+    "s": {
+      "tag": "c:slimeballs"
+    },
+    "b": {
+      "item": "minecraft:slime_block"
+    },
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    }
+  },
+  "pattern": [
+    "sss",
+    "sbs",
+    "rfr"
+  ],
+  "result": {
+    "id": "inventorygenerators:inventory_slimey_generator"
+  },
+  "show_notification": true
+}

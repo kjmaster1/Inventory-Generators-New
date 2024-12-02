@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_potion_generator"
+  },
+  "fuels": [
+    {
+      "item": "minecraft:potion"
+    }
+  ],
+  "burnTime": 80,
+  "RF": 80
+}

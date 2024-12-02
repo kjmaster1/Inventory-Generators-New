@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "inventorygenerators",
+  "key": {
+    "r": {
+      "tag": "c:dusts/redstone"
+    },
+    "o": {
+      "tag": "c:obsidians"
+    },
+    "p": {
+      "tag": "c:ender_pearls"
+    },
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    }
+  },
+  "pattern": [
+    "ppp",
+    "pop",
+    "rfr"
+  ],
+  "result": {
+    "id": "inventorygenerators:inventory_end_generator"
+  },
+  "show_notification": true
+}

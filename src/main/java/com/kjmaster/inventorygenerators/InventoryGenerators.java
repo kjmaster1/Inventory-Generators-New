@@ -1,0 +1,114 @@
+package com.kjmaster.inventorygenerators;
+
+import com.kjmaster.inventorygenerators.capabilities.EnergyStorageItemstack;
+import com.kjmaster.inventorygenerators.curios.CuriosIntegration;
+import com.kjmaster.inventorygenerators.generators.InventoryGeneratorContainer;
+import com.kjmaster.inventorygenerators.generators.InventoryGeneratorItem;
+import com.kjmaster.inventorygenerators.generators.InventoryGeneratorModule;
+import com.kjmaster.inventorygenerators.setup.*;
+import com.kjmaster.inventorygenerators.upgrades.UpgradesModule;
+import com.mojang.logging.LogUtils;
+import mcjty.lib.container.GenericItemHandler;
+import mcjty.lib.modules.Modules;
+import mcjty.lib.tileentity.GenericTileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.MutableDataComponentHolder;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.items.ComponentItemHandler;
+import org.slf4j.Logger;
+
+import java.util.function.Supplier;
+
+// The value here should match an entry in the META-INF/neoforge.mods.toml file
+@Mod(InventoryGenerators.MODID)
+public class InventoryGenerators {
+    // Define mod id in a common place for everything to reference
+    public static final String MODID = "inventorygenerators";
+    @SuppressWarnings("PublicField")
+    public static final ModSetup setup = new ModSetup();
+    // Directly reference a slf4j logger
+    public static final Logger LOGGER = LogUtils.getLogger();
+    @SuppressWarnings("PublicField")
+    public static InventoryGenerators instance;
+
+    private final Modules modules = new Modules();
+
+    public InventoryGenerators(ModContainer mod, IEventBus bus, Dist dist) {
+
+        instance = this;
+        setupModules(bus, dist);
+
+        Registration.register(bus);
+
+        CuriosIntegration.load();
+
+        bus.addListener(setup::init);
+        bus.addListener(modules::init);
+
+        bus.addListener(this::registerCapabilities);
+        bus.addListener(InventoryGeneratorsBaseMessages::registerMessages);
+
+        if (dist.isClient()) {
+            bus.addListener(ClientSetup::init);
+            bus.addListener(ClientSetup::registerKeybinds);
+            bus.addListener(modules::initClient);
+        }
+
+        mod.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+    }
+
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerItem(Capabilities.EnergyStorage.ITEM,
+            (itemStack, context) -> new EnergyStorageItemstack(((InventoryGeneratorItem) itemStack.getItem()).getMaxEnergyStored(itemStack), itemStack),
+            InventoryGeneratorModule.INVENTORY_CULINARY_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_DEATH_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_END_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_EXPLOSIVE_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_FROSTY_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_FURNACE_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_HALITOSIS_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_NETHER_STAR_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_OVERCLOCKED_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_PINK_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_POTION_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_SLIMEY_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_SURVIVALIST_GENERATOR.get()
+        );
+        event.registerItem(Capabilities.ItemHandler.ITEM,
+            (itemstack, context) -> new ComponentItemHandler(itemstack, InvGensDataComponents.GENERATOR_CONTENTS.get(),5),
+            InventoryGeneratorModule.INVENTORY_CULINARY_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_DEATH_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_END_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_EXPLOSIVE_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_FROSTY_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_FURNACE_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_HALITOSIS_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_NETHER_STAR_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_OVERCLOCKED_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_PINK_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_POTION_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_SLIMEY_GENERATOR.get(),
+            InventoryGeneratorModule.INVENTORY_SURVIVALIST_GENERATOR.get()
+        );
+    }
+
+    public static <T extends Item> Supplier<T> tab(Supplier<T> supplier) {
+        return setup.tab(supplier);
+    }
+
+    private void setupModules(IEventBus bus, Dist dist) {
+        modules.register(new InventoryGeneratorModule(bus, dist));
+        modules.register(new UpgradesModule());
+    }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_end_generator"
+  },
+  "fuels": [
+    {
+      "item": "minecraft:ender_eye"
+    }
+  ],
+  "burnTime": 3200,
+  "RF": 80
+}

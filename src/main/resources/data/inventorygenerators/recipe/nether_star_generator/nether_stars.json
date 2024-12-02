@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_nether_star_generator"
+  },
+  "fuels": [
+    {
+      "tag": "c:nether_stars"
+    }
+  ],
+  "burnTime": 2400,
+  "RF": 4000
+}

@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_halitosis_generator"
+  },
+  "fuels": [
+    {
+      "item": "minecraft:dragon_breath"
+    }
+  ],
+  "burnTime": 12000,
+  "RF": 40
+}

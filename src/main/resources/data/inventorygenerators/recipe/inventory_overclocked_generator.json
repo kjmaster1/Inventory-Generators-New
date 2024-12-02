@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "inventorygenerators",
+  "key": {
+    "r": {
+      "tag": "c:dusts/redstone"
+    },
+    "g": {
+      "tag": "c:storage_blocks/gold"
+    },
+    "l": {
+      "tag": "c:gems/lapis"
+    },
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    }
+  },
+  "pattern": [
+    "lll",
+    "lgl",
+    "rfr"
+  ],
+  "result": {
+    "id": "inventorygenerators:inventory_overclocked_generator"
+  },
+  "show_notification": true
+}

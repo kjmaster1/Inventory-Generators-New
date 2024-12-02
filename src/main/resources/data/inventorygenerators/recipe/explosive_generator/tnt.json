@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_explosive_generator"
+  },
+  "fuels": [
+    {
+      "item": "minecraft:tnt"
+    }
+  ],
+  "burnTime": 3200,
+  "RF": 40
+}

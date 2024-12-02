@@ -1,0 +1,17 @@
+{
+  "values": [
+    "inventorygenerators:inventory_culinary_generator",
+    "inventorygenerators:inventory_death_generator",
+    "inventorygenerators:inventory_end_generator",
+    "inventorygenerators:inventory_explosive_generator",
+    "inventorygenerators:inventory_frosty_generator",
+    "inventorygenerators:inventory_furnace_generator",
+    "inventorygenerators:inventory_halitosis_generator",
+    "inventorygenerators:inventory_nether_star_generator",
+    "inventorygenerators:inventory_overclocked_generator",
+    "inventorygenerators:inventory_pink_generator",
+    "inventorygenerators:inventory_potion_generator",
+    "inventorygenerators:inventory_slimey_generator",
+    "inventorygenerators:inventory_survivalist_generator"
+  ]
+}

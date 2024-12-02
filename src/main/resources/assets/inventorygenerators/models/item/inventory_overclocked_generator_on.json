@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "inventorygenerators:item/inventory_overclocked_generator_on"
+  }
+}

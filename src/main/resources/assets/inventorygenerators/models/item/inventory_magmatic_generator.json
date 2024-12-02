@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "inventorygenerators:item/inventory_magmatic_generator_off"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "inventorygenerators:on": 1
+      },
+      "model": "inventorygenerators:item/inventory_magmatic_generator_on"
+    }
+  ]
+}

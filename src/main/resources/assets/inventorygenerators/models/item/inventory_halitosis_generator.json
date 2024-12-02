@@ -1,0 +1,32 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "inventorygenerators:item/inventory_halitosis_generator_off"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "inventorygenerators:on": 1
+      },
+      "model": "inventorygenerators:item/inventory_halitosis_generator_on_1"
+    },
+    {
+      "predicate": {
+        "inventorygenerators:on": 2
+      },
+      "model": "inventorygenerators:item/inventory_halitosis_generator_on_2"
+    },
+    {
+      "predicate": {
+        "inventorygenerators:on": 3
+      },
+      "model": "inventorygenerators:item/inventory_halitosis_generator_on_3"
+    },
+    {
+      "predicate": {
+        "inventorygenerators:on": 4
+      },
+      "model": "inventorygenerators:item/inventory_halitosis_generator_on_4"
+    }
+  ]
+}
