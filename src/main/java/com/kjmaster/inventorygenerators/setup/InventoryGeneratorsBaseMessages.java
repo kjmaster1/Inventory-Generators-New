@@ -22,7 +22,7 @@ public class InventoryGeneratorsBaseMessages {
     }
 
     public static <T extends CustomPacketPayload> void sendToPlayer(T packet, Player player) {
-        PacketDistributor.sendToPlayer((ServerPlayer)player, packet);
+        PacketDistributor.sendToPlayer((ServerPlayer) player, packet);
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T packet) {

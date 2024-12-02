@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,10 +24,9 @@ import static com.kjmaster.inventorygenerators.InventoryGenerators.MODID;
  * Contains various helper functions to assist with String manipulation.
  *
  * @author King Lemming
- *
+ * <p>
  * This class is used in KJLib under the 'CoFH "Don't Be a Jerk" License' which can be found here https://goo.gl/QsbhBa
  * The license states 'You CAN... Copy portions of this code for use in other projects.'
- *
  */
 
 public final class StringHelper {

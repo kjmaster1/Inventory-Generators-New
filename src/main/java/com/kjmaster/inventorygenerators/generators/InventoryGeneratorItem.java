@@ -28,7 +28,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.ComponentItemHandler;
@@ -38,7 +40,10 @@ import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static com.kjmaster.inventorygenerators.setup.Config.doSendEnergy;
 import static com.kjmaster.inventorygenerators.setup.Config.doSideEffects;
@@ -156,8 +161,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
                 componentItemHandler.setStackInSlot(0, new ItemStack(Items.GLASS_BOTTLE));
             } else if (fuel.getItem() == Items.LAVA_BUCKET || fuel.getItem() == Items.WATER_BUCKET || fuel.getItem() == Items.POWDER_SNOW_BUCKET) {
                 componentItemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET));
-            }
-            else {
+            } else {
                 fuel.shrink(1);
                 componentItemHandler.setStackInSlot(0, fuel);
             }
@@ -286,10 +290,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
 
     @Override
     public boolean isItemValid(ItemStack generator, ItemStack fuel, Level level) {
-        if (getRecipeHolder(generator, fuel, level).isPresent()) {
-            return true;
-        }
-        return false;
+        return getRecipeHolder(generator, fuel, level).isPresent();
     }
 
     @Override

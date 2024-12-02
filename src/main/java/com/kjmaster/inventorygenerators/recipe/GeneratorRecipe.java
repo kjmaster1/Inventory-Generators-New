@@ -3,13 +3,16 @@ package com.kjmaster.inventorygenerators.recipe;
 import com.kjmaster.inventorygenerators.setup.Registration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-import java.util.Arrays;
 import java.util.List;
 
-public record GeneratorRecipe(List<Ingredient> fuels, Ingredient generator, int burnTime, int RF) implements Recipe<GeneratorRecipeInput> {
+public record GeneratorRecipe(List<Ingredient> fuels, Ingredient generator, int burnTime,
+                              int RF) implements Recipe<GeneratorRecipeInput> {
 
     @Override
     public boolean matches(GeneratorRecipeInput generatorRecipeInput, Level level) {

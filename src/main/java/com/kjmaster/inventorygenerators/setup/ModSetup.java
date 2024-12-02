@@ -3,7 +3,6 @@ package com.kjmaster.inventorygenerators.setup;
 import mcjty.lib.setup.DefaultModSetup;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 public class ModSetup extends DefaultModSetup {
 

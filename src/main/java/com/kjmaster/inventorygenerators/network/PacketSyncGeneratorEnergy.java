@@ -7,8 +7,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
-
 import static com.kjmaster.inventorygenerators.InventoryGenerators.MODID;
 
 public record PacketSyncGeneratorEnergy(int energy) implements CustomPacketPayload {

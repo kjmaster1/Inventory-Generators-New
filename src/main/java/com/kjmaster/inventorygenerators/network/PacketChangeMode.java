@@ -1,7 +1,6 @@
 package com.kjmaster.inventorygenerators.network;
 
 import com.kjmaster.inventorygenerators.generators.IInventoryGenerator;
-import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,8 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-
-import java.util.function.Supplier;
 
 import static com.kjmaster.inventorygenerators.InventoryGenerators.MODID;
 

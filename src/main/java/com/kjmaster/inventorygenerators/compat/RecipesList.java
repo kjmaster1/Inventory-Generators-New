@@ -19,9 +19,10 @@ public class RecipesList {
         ClientLevel world = minecraft.level;
         this.recipe_manager = world.getRecipeManager();
     }
+
     public List<GeneratorRecipe> getGeneratorRecipes() {
         RecipeType<GeneratorRecipe> generatorRecipeRecipeType = (RecipeType<GeneratorRecipe>) Registration.GENERATOR_RECIPE_TYPE.get();
-        List<RecipeHolder<GeneratorRecipe>> recipeHolders =  recipe_manager.getAllRecipesFor(generatorRecipeRecipeType);
+        List<RecipeHolder<GeneratorRecipe>> recipeHolders = recipe_manager.getAllRecipesFor(generatorRecipeRecipeType);
         List<GeneratorRecipe> generatorRecipes = new ArrayList<GeneratorRecipe>();
         for (RecipeHolder<GeneratorRecipe> holder : recipeHolders) {
             generatorRecipes.add(holder.value());

@@ -1,7 +1,6 @@
 package com.kjmaster.inventorygenerators.generators;
 
 import com.kjmaster.inventorygenerators.InventoryGenerators;
-import mcjty.lib.container.GenericContainer;
 import mcjty.lib.gui.GenericGuiContainer;
 import mcjty.lib.gui.ManualEntry;
 import mcjty.lib.gui.Window;
@@ -14,11 +13,9 @@ import mcjty.lib.gui.widgets.Widgets;
 import mcjty.lib.tileentity.GenericTileEntity;
 import mcjty.lib.varia.IEnergyItem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;

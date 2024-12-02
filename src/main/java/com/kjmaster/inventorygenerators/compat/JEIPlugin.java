@@ -113,7 +113,7 @@ public class JEIPlugin implements IModPlugin {
                 int healAmount = getHealAmount(properties);
                 int energyOutput = nerfLevels(healAmount * getSaturationModifier(properties) * 8000, 64000);
                 int energyRate = getEnergyRate(properties);
-                int burnTime =  Math.round((float) energyOutput / (float) energyRate);
+                int burnTime = Math.round((float) energyOutput / (float) energyRate);
                 foodRecipes.add(new GeneratorRecipe(List.of(Ingredient.of(stack)), Ingredient.of(culinaryGenerator), burnTime, energyRate));
             }
         });
