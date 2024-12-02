@@ -46,16 +46,14 @@ public class GeneratorRecipeSerializer implements RecipeSerializer<GeneratorReci
             IntStream.range(0, buffer.readInt()).forEach(
                     i -> fuels.add(Ingredient.CONTENTS_STREAM_CODEC.decode(buffer))
             );
-            System.out.println("Fuels List: " + fuels);
             return new GeneratorRecipe(fuels, Ingredient.CONTENTS_STREAM_CODEC.decode(buffer), buffer.readInt(), buffer.readInt());
         } catch (Exception e) {
-            InventoryGenerators.LOGGER.error("Error reading solid fuels recipe from packet. ", e);
+            InventoryGenerators.LOGGER.error("Error reading generator recipe from packet. ", e);
             throw e;
         }
     }
 
     public void toNetwork(@Nonnull RegistryFriendlyByteBuf buffer, GeneratorRecipe recipe) {
-        System.out.println("Recipe: " + recipe);
         try {
             buffer.writeInt(recipe.fuels().size());
             recipe.fuels().forEach(fuel -> {
@@ -65,7 +63,7 @@ public class GeneratorRecipeSerializer implements RecipeSerializer<GeneratorReci
             buffer.writeInt(recipe.burnTime());
             buffer.writeInt(recipe.RF());
         } catch (Exception e) {
-            InventoryGenerators.LOGGER.error("Error writing solid fuels recipe to packet.", e);
+            InventoryGenerators.LOGGER.error("Error writing generator recipe to packet.", e);
             throw e;
         }
     }

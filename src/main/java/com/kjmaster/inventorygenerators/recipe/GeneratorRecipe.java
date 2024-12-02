@@ -15,8 +15,6 @@ public record GeneratorRecipe(List<Ingredient> fuels, Ingredient generator, int 
     public boolean matches(GeneratorRecipeInput generatorRecipeInput, Level level) {
         if (generator.test(generatorRecipeInput.generator())) {
             for (Ingredient ingredient : fuels) {
-                System.out.println("Fuel: " + generatorRecipeInput.fuel());
-                System.out.println("Ingredient: " + Arrays.toString(ingredient.getItems()));
                 if (ingredient.test(generatorRecipeInput.fuel())) {
                     return true;
                 }

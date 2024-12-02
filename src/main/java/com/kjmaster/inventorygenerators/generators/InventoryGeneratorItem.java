@@ -286,9 +286,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
 
     @Override
     public boolean isItemValid(ItemStack generator, ItemStack fuel, Level level) {
-        System.out.println("Called IsItemValid!");
         if (getRecipeHolder(generator, fuel, level).isPresent()) {
-            System.out.println("Found Recipe!");
             return true;
         }
         return false;
@@ -306,10 +304,8 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     private int getCalculatedValue(ItemStack generator, ItemStack fuel, Level level, int valueIndex) {
-        System.out.println("Called Calculating Value!");
         Optional<? extends RecipeHolder<? extends GeneratorRecipe>> recipeHolder = getRecipeHolder(generator, fuel, level);
         if (recipeHolder.isPresent()) {
-            System.out.println("Found Recipe Holder: " + recipeHolder.get());
             GeneratorRecipe generatorRecipe = recipeHolder.get().value();
             if (valueIndex == 0) {
                 return generatorRecipe.burnTime();
