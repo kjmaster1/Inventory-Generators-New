@@ -9,14 +9,13 @@ import com.kjmaster.inventorygenerators.upgrades.UpgradesModule;
 import com.mojang.logging.LogUtils;
 import mcjty.lib.modules.Modules;
 import net.minecraft.world.item.Item;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.items.ComponentItemHandler;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
@@ -60,7 +59,7 @@ public class InventoryGenerators {
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerItem(Capabilities.EnergyStorage.ITEM,
+        event.register(ForgeCapabilities.ENERGY,
                 (itemStack, context) -> new EnergyStorageItemstack(((InventoryGeneratorItem) itemStack.getItem()).getMaxEnergyStored(itemStack), itemStack),
                 InventoryGeneratorModule.INVENTORY_CULINARY_GENERATOR.get(),
                 InventoryGeneratorModule.INVENTORY_DEATH_GENERATOR.get(),
@@ -76,7 +75,7 @@ public class InventoryGenerators {
                 InventoryGeneratorModule.INVENTORY_SLIMEY_GENERATOR.get(),
                 InventoryGeneratorModule.INVENTORY_SURVIVALIST_GENERATOR.get()
         );
-        event.registerItem(Capabilities.ItemHandler.ITEM,
+        event.register(Capabilities.ItemHandler.ITEM,
                 (itemstack, context) -> new ComponentItemHandler(itemstack, InvGensDataComponents.GENERATOR_CONTENTS.get(), 5),
                 InventoryGeneratorModule.INVENTORY_CULINARY_GENERATOR.get(),
                 InventoryGeneratorModule.INVENTORY_DEATH_GENERATOR.get(),
