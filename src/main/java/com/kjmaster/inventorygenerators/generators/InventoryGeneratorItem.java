@@ -1,6 +1,5 @@
 package com.kjmaster.inventorygenerators.generators;
 
-import com.kjmaster.inventorygenerators.InventoryGenerators;
 import com.kjmaster.inventorygenerators.curios.CuriosIntegration;
 import com.kjmaster.inventorygenerators.network.PacketSyncGeneratorEnergy;
 import com.kjmaster.inventorygenerators.recipe.GeneratorRecipe;
@@ -13,10 +12,8 @@ import mcjty.lib.items.BaseItem;
 import mcjty.lib.varia.ComponentFactory;
 import mcjty.lib.varia.IEnergyItem;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -59,15 +56,6 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         this.generatorName = generatorName;
     }
 
-    public static void initOverrides(InventoryGeneratorItem item) {
-        ItemProperties.register(item, ResourceLocation.fromNamespaceAndPath(InventoryGenerators.MODID, "on"), (stack, worldIn, entityIn, integer) -> {
-            if (stack.getItem() instanceof IInventoryGenerator inventoryGenerator) {
-                return inventoryGenerator.isOn(stack) && (inventoryGenerator.getBurnTime(stack) > 0) ? 1 : 0;
-            }
-            return 0;
-        });
-    }
-
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         tooltip.add(Component.translatable("info.invgens." + generatorName).withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD));
@@ -87,56 +75,67 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     private void addModeTooltips(ItemStack stack, List<Component> tooltip) {
-        if (isInChargingMode(stack)) {
-            tooltip.add(StringHelper.getNoticeText("info.invgens.modeOn"));
-        } else {
-            tooltip.add(StringHelper.getNoticeText("info.invgens.modeOff"));
-        }
+        tooltip.add(isInChargingMode(stack)
+                ? StringHelper.getNoticeText("info.invgens.modeOn")
+                : StringHelper.getNoticeText("info.invgens.modeOff"));
     }
 
     private void addEnergyAndBurnTimeTooltips(ItemStack stack, List<Component> tooltip) {
-        MutableComponent energyComponent = Component.literal(StringHelper.localize("info.invgens.charge") + ": " + StringHelper.getScaledNumber(getInternalEnergyStored(stack)))
-                .append(" / " + StringHelper.getScaledNumber(getMaxEnergyStored(stack)) + " RF");
-        tooltip.add(energyComponent);
+        tooltip.add(createEnergyTooltip(stack));
+        tooltip.add(createBurnTimeTooltip(stack));
+    }
 
-        MutableComponent burnTimeComponent = Component.literal(StringHelper.localize("info.invgens.burnTimeLeft") + ": " + StringHelper.format(getBurnTime(stack)));
-        tooltip.add(burnTimeComponent);
+    private MutableComponent createEnergyTooltip(ItemStack stack) {
+        int stored = getInternalEnergyStored(stack);
+        int max = getMaxEnergyStored(stack);
+        return Component.literal(String.format("%s: %s / %s RF",
+                StringHelper.localize("info.invgens.charge"),
+                StringHelper.getScaledNumber(stored),
+                StringHelper.getScaledNumber(max)));
+    }
+
+    private MutableComponent createBurnTimeTooltip(ItemStack stack) {
+        int burnTime = getBurnTime(stack);
+        return Component.literal(String.format("%s: %s",
+                StringHelper.localize("info.invgens.burnTimeLeft"),
+                StringHelper.format(burnTime)));
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level pLevel, @NotNull Entity entity, int pSlotId, boolean pIsSelected) {
-        super.inventoryTick(stack, pLevel, entity, pSlotId, pIsSelected);
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int pSlotId, boolean pIsSelected) {
+        super.inventoryTick(stack, level, entity, pSlotId, pIsSelected);
 
-        if (entity instanceof Player player && !pLevel.isClientSide) {
+        if (!(entity instanceof Player player) || level.isClientSide) {
+            return;
+        }
 
-            giveDataComponents(stack);
+        giveDataComponents(stack);
 
-            if (getBurnTime(stack) < 0) {
-                setBurnTime(stack, 0);
-            }
+        if (getBurnTime(stack) < 0) {
+            setBurnTime(stack, 0);
+        }
 
-            if (getBurnTime(stack) == 0) {
-                setCurrentFuel(stack, ItemStack.EMPTY);
-            }
+        if (getBurnTime(stack) == 0) {
+            setCurrentFuel(stack, ItemStack.EMPTY);
+        }
 
-            var itemHandler = stack.getCapability(Capabilities.ItemHandler.ITEM);
+        var itemHandler = stack.getCapability(Capabilities.ItemHandler.ITEM);
 
-            if (itemHandler != null) {
-                ItemStack speedUpgradeStack = itemHandler.getStackInSlot(1);
-                int numSpeedUpgrades = speedUpgradeStack.getCount();
-                if (isOn(stack)) {
-                    handleFuel(stack, itemHandler, pLevel);
-                    for (int i = 0; i <= numSpeedUpgrades; i++) {
-                        handleEnergy(stack, player);
-                    }
-
-                    if (shouldGiveSideEffect(itemHandler, stack)) {
-                        giveSideEffect(player);
-                    }
+        if (itemHandler != null) {
+            ItemStack speedUpgradeStack = itemHandler.getStackInSlot(1);
+            int numSpeedUpgrades = speedUpgradeStack.getCount();
+            if (isOn(stack)) {
+                handleFuel(stack, itemHandler, level);
+                for (int i = 0; i <= numSpeedUpgrades; i++) {
+                    handleEnergy(stack, player);
                 }
-                if (isInChargingMode(stack) && doSendEnergy) {
-                    handleCharging(stack, numSpeedUpgrades, player);
+
+                if (shouldGiveSideEffect(itemHandler, stack)) {
+                    giveSideEffect(player);
                 }
+            }
+            if (isInChargingMode(stack) && doSendEnergy) {
+                handleCharging(stack, numSpeedUpgrades, player);
             }
         }
     }
@@ -347,12 +346,8 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
 
     @Override
     public void turnOn(ItemStack stack) {
-        boolean isOn = stack.getOrDefault(InvGensDataComponents.GENERATOR_ON, false);
-        if (isOn) {
-            stack.set(InvGensDataComponents.GENERATOR_ON, false);
-        } else {
-            stack.set(InvGensDataComponents.GENERATOR_ON, true);
-        }
+        boolean isOn = isOn(stack);
+        stack.set(InvGensDataComponents.GENERATOR_ON, !isOn);
     }
 
     @Override

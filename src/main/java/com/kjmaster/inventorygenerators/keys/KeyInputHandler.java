@@ -3,6 +3,7 @@ package com.kjmaster.inventorygenerators.keys;
 import com.kjmaster.inventorygenerators.network.PacketChangeMode;
 import com.kjmaster.inventorygenerators.setup.InventoryGeneratorsBaseMessages;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 

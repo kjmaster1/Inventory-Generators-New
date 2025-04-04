@@ -1,6 +1,7 @@
 package com.kjmaster.inventorygenerators.generators;
 
 import com.kjmaster.inventorygenerators.curios.CuriosIntegration;
+import com.kjmaster.inventorygenerators.setup.ClientSetup;
 import com.kjmaster.inventorygenerators.setup.Registration;
 import mcjty.lib.modules.IModule;
 import net.minecraft.world.InteractionHand;
@@ -39,7 +40,9 @@ public class InventoryGeneratorModule implements IModule {
     public static final Supplier<MenuType<InventoryGeneratorContainer>> CONTAINER_INVENTORY_GENERATOR = Registration.CONTAINERS.register("inventory_generator", InventoryGeneratorModule::createContainer);
 
     public InventoryGeneratorModule(IEventBus bus, Dist dist) {
-        bus.addListener(this::registerScreens);
+        if (dist.isClient()) {
+            bus.addListener(this::registerScreens);
+        }
     }
 
     private static MenuType<InventoryGeneratorContainer> createContainer() {
@@ -60,21 +63,20 @@ public class InventoryGeneratorModule implements IModule {
     @Override
     public void initClient(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            InventoryGeneratorItem.initOverrides(INVENTORY_CULINARY_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_DEATH_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_END_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_EXPLOSIVE_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_FROSTY_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_FURNACE_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_NETHER_STAR_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_OVERCLOCKED_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_PINK_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_POTION_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_SLIMEY_GENERATOR.get());
-            InventoryGeneratorItem.initOverrides(INVENTORY_SURVIVALIST_GENERATOR.get());
-            // InventoryGeneratorItem.initOverrides(INVENTORY_MAGMATIC_GENERATOR.get());
-
-            InventoryHalitosisGeneratorItem.initOverrides(INVENTORY_HALITOSIS_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_CULINARY_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_DEATH_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_END_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_EXPLOSIVE_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_FROSTY_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_FURNACE_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_NETHER_STAR_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_OVERCLOCKED_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_PINK_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_POTION_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_SLIMEY_GENERATOR.get());
+            ClientSetup.initOverrides(INVENTORY_SURVIVALIST_GENERATOR.get());
+            // ClientSetup.initOverrides(INVENTORY_MAGMATIC_GENERATOR.get());
+            ClientSetup.initHalitosisOverrides(INVENTORY_HALITOSIS_GENERATOR.get());
 
             if (CuriosIntegration.hasMod()) {
                 CuriosIntegration.curiosSetup();

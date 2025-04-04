@@ -3,6 +3,7 @@ package com.kjmaster.inventorygenerators.setup;
 import com.kjmaster.inventorygenerators.InventoryGenerators;
 import com.kjmaster.inventorygenerators.network.PacketChangeMode;
 import com.kjmaster.inventorygenerators.network.PacketSyncGeneratorEnergy;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -26,6 +27,7 @@ public class InventoryGeneratorsBaseMessages {
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T packet) {
+        if (Minecraft.getInstance().getConnection() == null) return;
         PacketDistributor.sendToServer(packet);
     }
 }
