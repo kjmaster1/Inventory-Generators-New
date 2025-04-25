@@ -1,4 +1,4 @@
-package com.kjmaster.inventorygenerators.compat;
+package com.kjmaster.inventorygenerators.compat.jei;
 
 import com.kjmaster.inventorygenerators.recipe.GeneratorRecipe;
 import com.kjmaster.inventorygenerators.setup.Registration;

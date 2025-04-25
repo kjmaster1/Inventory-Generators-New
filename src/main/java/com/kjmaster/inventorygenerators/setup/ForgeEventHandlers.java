@@ -1,6 +1,6 @@
 package com.kjmaster.inventorygenerators.setup;
 
-import com.kjmaster.inventorygenerators.curios.CuriosIntegration;
+import com.kjmaster.inventorygenerators.compat.curios.CuriosIntegration;
 import com.kjmaster.inventorygenerators.generators.IInventoryGenerator;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
 import net.minecraft.server.level.ServerPlayer;

@@ -1,4 +1,4 @@
-package com.kjmaster.inventorygenerators.curios;
+package com.kjmaster.inventorygenerators.compat.curios;
 
 import com.kjmaster.inventorygenerators.generators.InventoryGeneratorModule;
 import net.minecraft.world.entity.player.Player;

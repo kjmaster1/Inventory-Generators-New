@@ -1,7 +1,7 @@
 package com.kjmaster.inventorygenerators;
 
 import com.kjmaster.inventorygenerators.capabilities.EnergyStorageItemstack;
-import com.kjmaster.inventorygenerators.curios.CuriosIntegration;
+import com.kjmaster.inventorygenerators.compat.curios.CuriosIntegration;
 import com.kjmaster.inventorygenerators.generators.InventoryGeneratorItem;
 import com.kjmaster.inventorygenerators.generators.InventoryGeneratorModule;
 import com.kjmaster.inventorygenerators.setup.*;

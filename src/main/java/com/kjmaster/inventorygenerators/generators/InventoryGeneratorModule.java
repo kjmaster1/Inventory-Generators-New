@@ -1,6 +1,6 @@
 package com.kjmaster.inventorygenerators.generators;
 
-import com.kjmaster.inventorygenerators.curios.CuriosIntegration;
+import com.kjmaster.inventorygenerators.compat.curios.CuriosIntegration;
 import com.kjmaster.inventorygenerators.setup.ClientSetup;
 import com.kjmaster.inventorygenerators.setup.Registration;
 import mcjty.lib.modules.IModule;

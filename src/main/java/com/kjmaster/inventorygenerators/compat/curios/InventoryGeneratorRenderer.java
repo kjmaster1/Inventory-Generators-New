@@ -1,4 +1,4 @@
-package com.kjmaster.inventorygenerators.curios;
+package com.kjmaster.inventorygenerators.compat.curios;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
