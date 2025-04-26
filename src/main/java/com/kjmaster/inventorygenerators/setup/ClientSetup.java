@@ -35,7 +35,7 @@ public class ClientSetup {
             if (stack.getItem() instanceof IInventoryGenerator inventoryGenerator) {
                 int burnTime = inventoryGenerator.getBurnTime(stack);
                 if (inventoryGenerator.isOn(stack) && burnTime > 0) {
-                    int time = (inventoryGenerator).calculateTime(stack, inventoryGenerator.getFuel(stack, worldIn), worldIn);
+                    int time = (inventoryGenerator).calculateTime(stack, inventoryGenerator.getCurrentFuel(stack), worldIn);
                     if (burnTime < time / 4) {
                         return 1;
                     } else if (burnTime < time / 2) {

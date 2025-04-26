@@ -28,7 +28,9 @@ public interface IInventoryGenerator {
 
     void setBurnTime(ItemStack stack, int burnTime);
 
-    ItemStack getFuel(ItemStack stack, Level level);
+    ItemStack getStackInFuelSlot(ItemStack stack, Level level);
+
+    ItemStack getCurrentFuel(ItemStack stack);
 
     void receiveInternalEnergy(ItemStack stack, int energy);
 

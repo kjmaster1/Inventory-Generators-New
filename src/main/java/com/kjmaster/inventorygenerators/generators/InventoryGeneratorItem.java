@@ -30,6 +30,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.items.ComponentItemHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -145,9 +147,9 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     private void handleFuel(ItemStack stack, IItemHandler inv, Level level) {
-        if (getBurnTime(stack) <= 0 && !getFuel(stack, level).isEmpty()
+        if (getBurnTime(stack) <= 0 && !getStackInFuelSlot(stack, level).isEmpty()
                 && getInternalEnergyStored(stack) < getMaxEnergyStored(stack)) {
-            ItemStack fuel = getFuel(stack, level);
+            ItemStack fuel = getStackInFuelSlot(stack, level);
             setBurnTime(stack, calculateTime(stack, fuel, level));
             setCurrentFuel(stack, fuel);
             consumeFuel(fuel, inv);
@@ -158,11 +160,26 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         if (inv instanceof ComponentItemHandler componentItemHandler) {
             if (fuel.getItem() instanceof PotionItem && fuel.getCount() == 1) {
                 componentItemHandler.setStackInSlot(0, new ItemStack(Items.GLASS_BOTTLE));
-            } else if (fuel.getItem() == Items.LAVA_BUCKET || fuel.getItem() == Items.WATER_BUCKET || fuel.getItem() == Items.POWDER_SNOW_BUCKET) {
-                componentItemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET));
+            } else if (fuel.getCapability(Capabilities.FluidHandler.ITEM) != null) {
+                IFluidHandlerItem iFluidHandlerItem = fuel.getCapability(Capabilities.FluidHandler.ITEM);
+                assert iFluidHandlerItem != null;
+                iFluidHandlerItem.drain(1000, IFluidHandler.FluidAction.EXECUTE);
+                boolean allEmpty = true;
+                for (int i = 0; i < iFluidHandlerItem.getTanks(); i++) {
+                    if (!iFluidHandlerItem.getFluidInTank(i).isEmpty()) {
+                        allEmpty = false;
+                    }
+                }
+                if (allEmpty) {
+                    componentItemHandler.setStackInSlot(0, iFluidHandlerItem.getContainer());
+                }
+//            }
+//            else if (fuel.getItem() == Items.LAVA_BUCKET || fuel.getItem() == Items.WATER_BUCKET || fuel.getItem() == Items.POWDER_SNOW_BUCKET) {
+//                componentItemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET));
             } else {
-                fuel.shrink(1);
-                componentItemHandler.setStackInSlot(0, fuel);
+                ItemStack fuelShrink = fuel.copy();
+                fuelShrink.shrink(1);
+                componentItemHandler.setStackInSlot(0, fuelShrink);
             }
         }
     }
@@ -360,10 +377,11 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         stack.set(InvGensDataComponents.GENERATOR_BURN_TIME, burnTime);
     }
 
+    @Override
     public ItemStack getCurrentFuel(ItemStack stack) {
         var itemHandler = stack.getCapability(Capabilities.ItemHandler.ITEM);
         if (itemHandler != null) {
-            return itemHandler.getStackInSlot(4);
+            return itemHandler.getStackInSlot(4).copy();
         }
         return ItemStack.EMPTY;
     }
@@ -376,10 +394,10 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     @Override
-    public ItemStack getFuel(ItemStack stack, Level level) {
+    public ItemStack getStackInFuelSlot(ItemStack stack, Level level) {
         var itemHandler = stack.getCapability(Capabilities.ItemHandler.ITEM);
         if (itemHandler != null) {
-            ItemStack fuelStack = itemHandler.getStackInSlot(0);
+            ItemStack fuelStack = itemHandler.getStackInSlot(0).copy();
             return isItemValid(stack, fuelStack, level) ? fuelStack : ItemStack.EMPTY;
         }
         return ItemStack.EMPTY;
