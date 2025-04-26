@@ -7,14 +7,14 @@ import com.kjmaster.inventorygenerators.keys.KeyBindings;
 import com.kjmaster.inventorygenerators.keys.KeyInputHandler;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class ClientSetup {
 
     public static void init(FMLClientSetupEvent e) {
-        NeoForge.EVENT_BUS.register(new KeyInputHandler());
+        MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
     }
 
     public static void registerKeybinds(RegisterKeyMappingsEvent event) {
@@ -35,7 +35,7 @@ public class ClientSetup {
             if (stack.getItem() instanceof IInventoryGenerator inventoryGenerator) {
                 int burnTime = inventoryGenerator.getBurnTime(stack);
                 if (inventoryGenerator.isOn(stack) && burnTime > 0) {
-                    int time = (inventoryGenerator).calculateTime(stack, inventoryGenerator.getFuel(stack, worldIn), worldIn);
+                    int time = (inventoryGenerator).calculateTime(stack, inventoryGenerator.getCurrentFuel(stack), worldIn);
                     if (burnTime < time / 4) {
                         return 1;
                     } else if (burnTime < time / 2) {

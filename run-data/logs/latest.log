@@ -1,0 +1,38 @@
+[26Apr2025 03:18:19.219] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgedatauserdev, --assetIndex, 5, --assetsDir, C:\Users\kurti\.gradle\caches\forge_gradle\assets, --gameDir, ., --fml.forgeVersion, 47.4.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --mod, inventorygenerators, --all, --output, C:\Users\kurti\Desktop\Coding\Minecraft\Neoforge\Inventory-Generators-New\src\generated\resources, --existing, C:\Users\kurti\Desktop\Coding\Minecraft\Neoforge\Inventory-Generators-New\src\main\resources]
+[26Apr2025 03:18:19.226] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 21.0.5 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
+[26Apr2025 03:18:19.395] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgedatauserdev
+[26Apr2025 03:18:19.432] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/C:/Users/kurti/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23128!/ Service=ModLauncher Env=CLIENT
+[26Apr2025 03:18:19.883] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\kurti\.gradle\caches\modules-2\files-2.1\net.minecraftforge\javafmllanguage\1.20.1-47.4.0\f0c0b352173d0a378cbdcec9cfc4ba65899a721\javafmllanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[26Apr2025 03:18:19.885] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\kurti\.gradle\caches\modules-2\files-2.1\net.minecraftforge\lowcodelanguage\1.20.1-47.4.0\e862740d8c84d08dbfedea412bef88fe42e727c5\lowcodelanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[26Apr2025 03:18:19.888] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\kurti\.gradle\caches\modules-2\files-2.1\net.minecraftforge\mclanguage\1.20.1-47.4.0\5719b3a297a33f877ed5dde4cb4bd75c859096af\mclanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[26Apr2025 03:18:19.889] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file C:\Users\kurti\.gradle\caches\modules-2\files-2.1\net.minecraftforge\fmlcore\1.20.1-47.4.0\235975dafa4309945b59c56b53f31dc5b65a6051\fmlcore-1.20.1-47.4.0.jar is missing mods.toml file
+[26Apr2025 03:18:20.073] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[26Apr2025 03:18:21.767] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[26Apr2025 03:18:21.772] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgedatauserdev' with arguments [--gameDir, ., --assetsDir, C:\Users\kurti\.gradle\caches\forge_gradle\assets, --assetIndex, 5, --mod, inventorygenerators, --all, --output, C:\Users\kurti\Desktop\Coding\Minecraft\Neoforge\Inventory-Generators-New\src\generated\resources, --existing, C:\Users\kurti\Desktop\Coding\Minecraft\Neoforge\Inventory-Generators-New\src\main\resources]
+[26Apr2025 03:18:22.022] [main/INFO] [mixin/]: Remapping refMap cucumber.refmap.json using C:\Users\kurti\Desktop\Coding\Minecraft\Neoforge\Inventory-Generators-New\build\createSrgToMcp\output.srg
+[26Apr2025 03:18:22.025] [main/INFO] [mixin/]: Remapping refMap curios.refmap.json using C:\Users\kurti\Desktop\Coding\Minecraft\Neoforge\Inventory-Generators-New\build\createSrgToMcp\output.srg
+[26Apr2025 03:18:22.366] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [inventorygenerators]
+[26Apr2025 03:18:26.653] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.0, for MC 1.20.1 with MCP 20230612.114412
+[26Apr2025 03:18:26.655] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.4.0 Initialized
+[26Apr2025 03:18:27.056] [modloading-worker-0/INFO] [mezz.jei.library.load.PluginCaller/]: Sending ConfigManager...
+[26Apr2025 03:18:27.068] [modloading-worker-0/INFO] [mezz.jei.library.load.PluginCaller/]: Sending ConfigManager took 9.086 ms
+[26Apr2025 03:18:27.571] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/kurti/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.4.0_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.4.0_mapped_parchment_2023.09.03-1.20.1.jar%23191!/assets/.mcassetsroot' uses unexpected schema
+[26Apr2025 03:18:27.572] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/kurti/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.4.0_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.4.0_mapped_parchment_2023.09.03-1.20.1.jar%23191!/data/.mcassetsroot' uses unexpected schema
+[26Apr2025 03:18:27.845] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Global Loot Modifiers : inventorygenerators
+[26Apr2025 03:18:27.854] [main/INFO] [net.minecraft.data.DataGenerator/]: Global Loot Modifiers : inventorygenerators finished after 7 ms
+[26Apr2025 03:18:27.854] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Recipes
+[26Apr2025 03:18:27.900] [main/INFO] [net.minecraft.data.DataGenerator/]: Recipes finished after 45 ms
+[26Apr2025 03:18:27.901] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Loot Tables
+[26Apr2025 03:18:27.917] [main/INFO] [net.minecraft.data.DataGenerator/]: Loot Tables finished after 16 ms
+[26Apr2025 03:18:27.918] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:block mod id inventorygenerators
+[26Apr2025 03:18:27.923] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:block mod id inventorygenerators finished after 5 ms
+[26Apr2025 03:18:27.923] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:item mod id inventorygenerators
+[26Apr2025 03:18:27.924] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:item mod id inventorygenerators finished after 1 ms
+[26Apr2025 03:18:27.925] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Languages: en_us
+[26Apr2025 03:18:27.925] [main/INFO] [net.minecraft.data.DataGenerator/]: Languages: en_us finished after 0 ms
+[26Apr2025 03:18:27.925] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Block States: inventorygenerators
+[26Apr2025 03:18:27.925] [main/INFO] [net.minecraft.data.DataGenerator/]: Block States: inventorygenerators finished after 0 ms
+[26Apr2025 03:18:27.925] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Item Models: inventorygenerators
+[26Apr2025 03:18:27.926] [main/INFO] [net.minecraft.data.DataGenerator/]: Item Models: inventorygenerators finished after 0 ms
+[26Apr2025 03:18:27.926] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 80 ms
+[26Apr2025 03:18:27.936] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 33, old count: 0, new count: 34, removed stale: 0, written: 33

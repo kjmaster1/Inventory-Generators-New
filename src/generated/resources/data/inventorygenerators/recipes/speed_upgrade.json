@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "g": {
+      "tag": "forge:storage_blocks/gold"
+    },
+    "s": {
+      "item": "minecraft:sugar"
+    }
+  },
+  "pattern": [
+    "gsg",
+    "RRR",
+    "RRR"
+  ],
+  "result": {
+    "item": "inventorygenerators:speed_upgrade"
+  },
+  "show_notification": true
+}

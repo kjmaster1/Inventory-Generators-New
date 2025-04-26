@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_explosive_generator"
+  },
+  "fuels": [
+    {
+      "tag": "forge:gunpowder"
+    }
+  ],
+  "burnTime": 400,
+  "RF": 120
+}

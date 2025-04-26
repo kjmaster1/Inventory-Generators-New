@@ -1,6 +1,8 @@
 package com.kjmaster.inventorygenerators.generators;
 
 import com.kjmaster.inventorygenerators.InventoryGenerators;
+import mcjty.lib.bindings.Value;
+import mcjty.lib.blockcommands.Command;
 import mcjty.lib.gui.GenericGuiContainer;
 import mcjty.lib.gui.ManualEntry;
 import mcjty.lib.gui.Window;
@@ -11,14 +13,17 @@ import mcjty.lib.gui.widgets.Label;
 import mcjty.lib.gui.widgets.Panel;
 import mcjty.lib.gui.widgets.Widgets;
 import mcjty.lib.tileentity.GenericTileEntity;
+import mcjty.lib.typed.TypedMap;
 import mcjty.lib.varia.IEnergyItem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -35,7 +40,7 @@ public class InventoryGeneratorGui extends GenericGuiContainer<GenericTileEntity
     public EnergyBar energyBar;
 
     public InventoryGeneratorGui(Component textComponent, InventoryGeneratorContainer container, Inventory inventory) {
-        super(container, inventory, textComponent, new ManualEntry(ResourceLocation.fromNamespaceAndPath(InventoryGenerators.MODID, "manual"), ResourceLocation.fromNamespaceAndPath(InventoryGenerators.MODID, "inventory_generator"), 0));
+        super(null, container, inventory, new ManualEntry(ResourceLocation.fromNamespaceAndPath(InventoryGenerators.MODID, "manual"), ResourceLocation.fromNamespaceAndPath(InventoryGenerators.MODID, "inventory_generator"), 0));
         displayName = textComponent;
         this.container = container;
     }
@@ -45,8 +50,9 @@ public class InventoryGeneratorGui extends GenericGuiContainer<GenericTileEntity
         return new InventoryGeneratorGui(textComponent, container, inventory);
     }
 
-    public static void register(RegisterMenuScreensEvent event) {
-        event.register(CONTAINER_INVENTORY_GENERATOR.get(), InventoryGeneratorGui::createInventoryGeneratorGui);
+    public static void register() {
+        MenuScreens.ScreenConstructor<InventoryGeneratorContainer, InventoryGeneratorGui> factory = InventoryGeneratorGui::createInventoryGeneratorGui;
+        MenuScreens.register(CONTAINER_INVENTORY_GENERATOR.get(), factory);
     }
 
     @Override
@@ -78,9 +84,17 @@ public class InventoryGeneratorGui extends GenericGuiContainer<GenericTileEntity
     }
 
     @Override
+    protected void drawWindow(GuiGraphics graphics) {
+        if (this.window != null) {
+            this.renderBackground(graphics);
+            this.getWindowManager().draw(graphics);
+        }
+    }
+
+    @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int x, int y) {
         updateFields();
-        drawWindow(graphics, partialTicks, x, y);
+        drawWindow(graphics);
     }
 
     @Override
@@ -91,4 +105,16 @@ public class InventoryGeneratorGui extends GenericGuiContainer<GenericTileEntity
             energyBar.maxValue(iEnergyItem.getMaxEnergyStored(stack));
         }
     }
+
+    @Override
+    public <T> void setValue(Value<?, T> value, T v) {}
+
+    @Override
+    public void sendServerCommandTyped(String command, TypedMap params) {}
+
+    @Override
+    public void sendServerCommandTyped(Command<?> command, TypedMap params) {}
+
+    @Override
+    public void sendServerCommandTyped(ResourceKey<Level> dimensionId, String command, TypedMap params) {}
 }

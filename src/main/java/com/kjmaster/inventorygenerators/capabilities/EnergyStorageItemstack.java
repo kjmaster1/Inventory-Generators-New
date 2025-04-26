@@ -1,24 +1,22 @@
 package com.kjmaster.inventorygenerators.capabilities;
 
-import com.kjmaster.inventorygenerators.setup.InvGensDataComponents;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.energy.EnergyStorage;
+import net.minecraftforge.energy.EnergyStorage;
 
-public class EnergyStorageItemstack extends EnergyStorage {
+public class EnergyStorageItemStack extends EnergyStorage {
+
     protected final ItemStack itemStack;
 
-    public EnergyStorageItemstack(int capacity, ItemStack itemStack) {
+    public EnergyStorageItemStack(int capacity, ItemStack itemStack) {
         super(capacity, 0, capacity, 0);
         this.itemStack = itemStack;
-        this.energy = itemStack.getOrDefault(InvGensDataComponents.FORGE_ENERGY, 0);
+        this.energy = itemStack.getOrCreateTag().getInt("energy");
     }
 
     public void setEnergy(int energy) {
         this.energy = energy;
-        itemStack.set(InvGensDataComponents.FORGE_ENERGY, energy);
+        itemStack.getOrCreateTag().putInt("energy", energy);
     }
 
     @Override
@@ -29,7 +27,7 @@ public class EnergyStorageItemstack extends EnergyStorage {
         int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
         if (!simulate) {
             energy += energyReceived;
-            itemStack.set(InvGensDataComponents.FORGE_ENERGY, energy);
+            setEnergy(energy);
         }
         return energyReceived;
     }
@@ -42,14 +40,18 @@ public class EnergyStorageItemstack extends EnergyStorage {
         int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
         if (!simulate) {
             energy -= energyExtracted;
-            itemStack.set(InvGensDataComponents.FORGE_ENERGY, energy);
+            setEnergy(energy);
         }
         return energyExtracted;
     }
 
     @Override
     public int getEnergyStored() {
-        return itemStack.getOrDefault(InvGensDataComponents.FORGE_ENERGY, 0);
+        CompoundTag tag = itemStack.getOrCreateTag();
+        if (tag.contains("energy")) {
+            return tag.getInt("energy");
+        }
+        return 0;
     }
 
     @Override
@@ -65,17 +67,5 @@ public class EnergyStorageItemstack extends EnergyStorage {
     @Override
     public boolean canReceive() {
         return this.maxReceive > 0;
-    }
-
-    @Override
-    public Tag serializeNBT(HolderLookup.Provider provider) {
-        return IntTag.valueOf(this.getEnergyStored());
-    }
-
-    @Override
-    public void deserializeNBT(HolderLookup.Provider provider, Tag nbt) {
-        if (!(nbt instanceof IntTag intNbt))
-            throw new IllegalArgumentException("Can not deserialize to an instance that isn't the default implementation");
-        this.energy = intNbt.getAsInt();
     }
 }

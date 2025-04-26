@@ -1,18 +1,27 @@
 package com.kjmaster.inventorygenerators.generators;
 
+import com.kjmaster.inventorygenerators.InventoryGenerators;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 public class InventoryGeneratorItemHandler implements IItemHandlerModifiable {
 
     final ItemStack generator;
-    private final IItemHandlerModifiable generatorInventory;
+    private IItemHandlerModifiable generatorInventory;
 
     public InventoryGeneratorItemHandler(ItemStack generator) {
         this.generator = generator;
-        this.generatorInventory = (IItemHandlerModifiable) generator.getCapability(Capabilities.ItemHandler.ITEM);
+        LazyOptional<IItemHandler> itemHandlerLazyOptional = generator.getCapability(ForgeCapabilities.ITEM_HANDLER);
+        try {
+            this.generatorInventory = (IItemHandlerModifiable) itemHandlerLazyOptional.orElseThrow(Exception::new);
+        } catch (Exception e) {
+            InventoryGenerators.LOGGER.error("No IItemHandlerModifiable capability found on generator!", e);
+        }
     }
 
     @Override

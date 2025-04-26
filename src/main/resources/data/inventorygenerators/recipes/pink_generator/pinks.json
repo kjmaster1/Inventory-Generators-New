@@ -1,0 +1,22 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_pink_generator"
+  },
+  "fuels": [
+    {
+      "tag": "forge:dyes/pink"
+    },
+    {
+      "tag": "forge:dyed/pink"
+    },
+    {
+      "item": "minecraft:pink_tulip"
+    },
+    {
+      "item": "minecraft:pink_petals"
+    }
+  ],
+  "burnTime": 10,
+  "RF": 40
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "y": {
+      "item": "minecraft:end_rod"
+    },
+    "z": {
+      "item": "minecraft:purpur_block"
+    }
+  },
+  "pattern": [
+    "zzz",
+    "zyz",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_halitosis_generator"
+  },
+  "show_notification": true
+}

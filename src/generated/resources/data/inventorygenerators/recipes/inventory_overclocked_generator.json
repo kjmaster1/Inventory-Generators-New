@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    },
+    "g": {
+      "tag": "forge:storage_blocks/gold"
+    },
+    "l": {
+      "tag": "forge:gems/lapis"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "lll",
+    "lgl",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_overclocked_generator"
+  },
+  "show_notification": true
+}

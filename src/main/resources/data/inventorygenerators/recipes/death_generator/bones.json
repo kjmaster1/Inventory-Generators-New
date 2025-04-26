@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_death_generator"
+  },
+  "fuels": [
+    {
+      "tag": "forge:bones"
+    }
+  ],
+  "burnTime": 400,
+  "RF": 40
+}

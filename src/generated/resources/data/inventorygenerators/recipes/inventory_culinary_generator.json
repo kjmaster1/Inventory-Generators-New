@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "w": {
+      "tag": "forge:crops/wheat"
+    },
+    "z": {
+      "item": "minecraft:cooked_porkchop"
+    }
+  },
+  "pattern": [
+    "www",
+    "wzw",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_culinary_generator"
+  },
+  "show_notification": true
+}

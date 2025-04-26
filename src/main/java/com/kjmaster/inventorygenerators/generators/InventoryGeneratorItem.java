@@ -1,10 +1,11 @@
 package com.kjmaster.inventorygenerators.generators;
 
-import com.kjmaster.inventorygenerators.curios.CuriosIntegration;
+import com.kjmaster.inventorygenerators.capabilities.EnergyStorageItemStack;
+import com.kjmaster.inventorygenerators.capabilities.GeneratorCapabilityProvider;
+import com.kjmaster.inventorygenerators.compat.curios.CuriosIntegration;
 import com.kjmaster.inventorygenerators.network.PacketSyncGeneratorEnergy;
 import com.kjmaster.inventorygenerators.recipe.GeneratorRecipe;
 import com.kjmaster.inventorygenerators.recipe.GeneratorRecipeInput;
-import com.kjmaster.inventorygenerators.setup.InvGensDataComponents;
 import com.kjmaster.inventorygenerators.setup.InventoryGeneratorsBaseMessages;
 import com.kjmaster.inventorygenerators.setup.Registration;
 import com.kjmaster.inventorygenerators.utils.StringHelper;
@@ -12,6 +13,7 @@ import mcjty.lib.items.BaseItem;
 import mcjty.lib.varia.ComponentFactory;
 import mcjty.lib.varia.IEnergyItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,10 +30,16 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -54,12 +62,19 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level pLevel, List<Component> tooltip, TooltipFlag pIsAdvanced) {
         tooltip.add(Component.translatable("info.invgens." + generatorName).withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD));
 
         addOnOffTooltips(stack, tooltip);
         addModeTooltips(stack, tooltip);
         addEnergyAndBurnTimeTooltips(stack, tooltip);
+    }
+
+    @Override
+    public @Nullable ICapabilityProvider initCapabilities(ItemStack itemStack, @Nullable CompoundTag nbt) {
+        ItemStackHandler stackHandler = new ItemStackHandler(5);
+        EnergyStorageItemStack energyStorageItemStack = new EnergyStorageItemStack(((InventoryGeneratorItem) itemStack.getItem()).getMaxEnergyStored(itemStack), itemStack);
+        return new GeneratorCapabilityProvider(itemStack, stackHandler, energyStorageItemStack);
     }
 
     private void addOnOffTooltips(ItemStack stack, List<Component> tooltip) {
@@ -106,7 +121,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
             return;
         }
 
-        giveDataComponents(stack);
+        giveNBT(stack);
 
         if (getBurnTime(stack) < 0) {
             setBurnTime(stack, 0);
@@ -116,9 +131,9 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
             setCurrentFuel(stack, ItemStack.EMPTY);
         }
 
-        var itemHandler = stack.getCapability(Capabilities.ItemHandler.ITEM);
+        LazyOptional<IItemHandler> lazyOptional = stack.getCapability(ForgeCapabilities.ITEM_HANDLER);
 
-        if (itemHandler != null) {
+        lazyOptional.ifPresent(itemHandler -> {
             ItemStack speedUpgradeStack = itemHandler.getStackInSlot(1);
             int numSpeedUpgrades = speedUpgradeStack.getCount();
             if (isOn(stack)) {
@@ -134,7 +149,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
             if (isInChargingMode(stack) && doSendEnergy) {
                 handleCharging(stack, numSpeedUpgrades, player);
             }
-        }
+        });
     }
 
     private boolean shouldGiveSideEffect(IItemHandler inv, ItemStack stack) {
@@ -142,9 +157,9 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     private void handleFuel(ItemStack stack, IItemHandler inv, Level level) {
-        if (getBurnTime(stack) <= 0 && !getFuel(stack, level).isEmpty()
+        if (getBurnTime(stack) <= 0 && !getFuelSlotStack(stack, level).isEmpty()
                 && getInternalEnergyStored(stack) < getMaxEnergyStored(stack)) {
-            ItemStack fuel = getFuel(stack, level);
+            ItemStack fuel = getFuelSlotStack(stack, level);
             setBurnTime(stack, calculateTime(stack, fuel, level));
             setCurrentFuel(stack, fuel);
             consumeFuel(fuel, inv);
@@ -152,14 +167,15 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     private void consumeFuel(ItemStack fuel, IItemHandler inv) {
-        if (inv instanceof ComponentItemHandler componentItemHandler) {
+        if (inv instanceof IItemHandlerModifiable componentItemHandler) {
             if (fuel.getItem() instanceof PotionItem && fuel.getCount() == 1) {
                 componentItemHandler.setStackInSlot(0, new ItemStack(Items.GLASS_BOTTLE));
             } else if (fuel.getItem() == Items.LAVA_BUCKET || fuel.getItem() == Items.WATER_BUCKET || fuel.getItem() == Items.POWDER_SNOW_BUCKET) {
                 componentItemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET));
             } else {
-                fuel.shrink(1);
-                componentItemHandler.setStackInSlot(0, fuel);
+                ItemStack fuelShrink = fuel.copy();
+                fuelShrink.shrink(1);
+                componentItemHandler.setStackInSlot(0, fuelShrink);
             }
         }
     }
@@ -217,11 +233,24 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     @Override
-    public void giveDataComponents(ItemStack stack) {
-        stack.getOrDefault(InvGensDataComponents.FORGE_ENERGY, 0);
-        stack.getOrDefault(InvGensDataComponents.GENERATOR_ON, false);
-        stack.getOrDefault(InvGensDataComponents.GENERATOR_CHARGING, false);
-        stack.getOrDefault(InvGensDataComponents.GENERATOR_BURN_TIME, 0);
+    public void giveNBT(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag == null) {
+            tag = new CompoundTag();
+        }
+        if (!tag.contains("energy")) {
+            tag.putInt("energy", 0);
+        }
+        if (!tag.contains("on")) {
+            tag.putBoolean("on", false);
+        }
+        if (!tag.contains("charging")) {
+            tag.putBoolean("charging", false);
+        }
+        if (!tag.contains("burnTime")) {
+            tag.putInt("burnTime", 0);
+        }
+        stack.setTag(tag);
     }
 
     @Override
@@ -252,12 +281,12 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         IItemHandlerModifiable inventory = CuriosIntegration.hasMod() ? CuriosIntegration.getFullInventory(player) : new PlayerInvWrapper(player.getInventory());
         for (int i = 0; i < inventory.getSlots(); i++) {
             ItemStack invStack = inventory.getStackInSlot(i);
-            var energy = invStack.getCapability(Capabilities.EnergyStorage.ITEM);
-            if (energy != null) {
+            LazyOptional<IEnergyStorage> lazyOptional = invStack.getCapability(ForgeCapabilities.ENERGY);
+            lazyOptional.ifPresent(energy -> {
                 if (energy.canReceive() && (energy.getEnergyStored() < energy.getMaxEnergyStored())) {
                     chargeables.add(invStack);
                 }
-            }
+            });
         }
         return chargeables;
     }
@@ -265,23 +294,30 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     @Override
     public void giveEnergyToChargeables(ArrayList<ItemStack> chargeables, ItemStack stack) {
         for (ItemStack chargeableStack : chargeables) {
-            var energy = chargeableStack.getCapability(Capabilities.EnergyStorage.ITEM);
-            if (energy != null) {
+            LazyOptional<IEnergyStorage> lazyOptional = chargeableStack.getCapability(ForgeCapabilities.ENERGY);
+            lazyOptional.ifPresent(energy -> {
                 int energySent = energy.receiveEnergy(getInternalEnergyStored(stack) / chargeables.size(), false);
                 extractEnergy(stack, energySent, false);
-            }
+            });
         }
         chargeables.clear();
     }
 
     @Override
     public void receiveInternalEnergy(ItemStack stack, int energy) {
-        stack.set(InvGensDataComponents.FORGE_ENERGY, getInternalEnergyStored(stack) + energy);
+        if (stack.getTag() != null) {
+            stack.getTag().putInt("energy", getInternalEnergyStored(stack) + energy);
+        }
     }
 
     @Override
     public int getInternalEnergyStored(ItemStack stack) {
-        return stack.getOrDefault(InvGensDataComponents.FORGE_ENERGY, 0);
+        if (stack.getTag() != null) {
+            if (stack.getTag().contains("energy")) {
+                return stack.getTag().getInt("energy");
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -297,13 +333,14 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     @Override
     public int calculatePower(ItemStack generator, Level level) {
         int minSend = getCalculatedValue(generator, getCurrentFuel(generator), level, 1);
-        return Math.min(getMaxEnergyStored(generator) - getInternalEnergyStored(generator), minSend);
+        int calculated = Math.min(getMaxEnergyStored(generator) - getInternalEnergyStored(generator), minSend);
+        return calculated;
     }
 
     private int getCalculatedValue(ItemStack generator, ItemStack fuel, Level level, int valueIndex) {
-        Optional<? extends RecipeHolder<? extends GeneratorRecipe>> recipeHolder = getRecipeHolder(generator, fuel, level);
+        Optional<? extends GeneratorRecipe> recipeHolder = getRecipeHolder(generator, fuel, level);
         if (recipeHolder.isPresent()) {
-            GeneratorRecipe generatorRecipe = recipeHolder.get().value();
+            GeneratorRecipe generatorRecipe = recipeHolder.get();
             if (valueIndex == 0) {
                 return generatorRecipe.burnTime();
             } else if (valueIndex == 1) {
@@ -313,7 +350,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         return 0;
     }
 
-    private Optional<? extends RecipeHolder<? extends GeneratorRecipe>> getRecipeHolder(ItemStack generator, ItemStack fuel, Level level) {
+    private Optional<? extends GeneratorRecipe> getRecipeHolder(ItemStack generator, ItemStack fuel, Level level) {
         if (quickCheck == null) {
             RecipeType<GeneratorRecipe> generatorRecipeRecipeType = (RecipeType<GeneratorRecipe>) Registration.GENERATOR_RECIPE_TYPE.get();
             this.quickCheck = RecipeManager.createCheck(generatorRecipeRecipeType);
@@ -323,63 +360,98 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
 
     @Override
     public boolean isInChargingMode(ItemStack stack) {
-        return stack.getOrDefault(InvGensDataComponents.GENERATOR_CHARGING, false);
+        if (stack.getTag() != null) {
+            if (stack.getTag().contains("charging")) {
+                return stack.getTag().getBoolean("charging");
+            }
+        }
+        return false;
     }
 
     @Override
     public void changeMode(ItemStack stack, IInventoryGenerator inventoryGenerator, Player player) {
-        boolean isCharging = stack.getOrDefault(InvGensDataComponents.GENERATOR_CHARGING, false);
-        if (isCharging) {
-            stack.set(InvGensDataComponents.GENERATOR_CHARGING, false);
+        if (stack.getTag() != null) {
+            if (stack.getTag().contains("charging")) {
+                boolean isCharging = stack.getTag().getBoolean("charging");
+                stack.getTag().putBoolean("charging", !isCharging);
+            }
         } else {
-            stack.set(InvGensDataComponents.GENERATOR_CHARGING, true);
+            CompoundTag compoundTag = new CompoundTag();
+            compoundTag.putBoolean("charging", true);
+            stack.setTag(compoundTag);
         }
     }
 
     @Override
     public boolean isOn(ItemStack stack) {
-        return stack.getOrDefault(InvGensDataComponents.GENERATOR_ON, false);
+        if (stack.getTag() != null) {
+            if (stack.getTag().contains("on")) {
+                return stack.getTag().getBoolean("on");
+            }
+        }
+        return false;
     }
 
     @Override
     public void turnOn(ItemStack stack) {
-        boolean isOn = isOn(stack);
-        stack.set(InvGensDataComponents.GENERATOR_ON, !isOn);
+        if (stack.getTag() != null) {
+            if (stack.getTag().contains("on")) {
+                boolean isOn = stack.getTag().getBoolean("on");
+                stack.getTag().putBoolean("on", !isOn);
+            }
+        } else {
+            CompoundTag compoundTag = new CompoundTag();
+            compoundTag.putBoolean("on", true);
+            stack.setTag(compoundTag);
+        }
     }
 
     @Override
     public int getBurnTime(ItemStack stack) {
-        return stack.getOrDefault(InvGensDataComponents.GENERATOR_BURN_TIME, 0);
+        if (stack.getTag() != null) {
+            if (stack.getTag().contains("burnTime")) {
+                return stack.getTag().getInt("burnTime");
+            }
+        }
+        return 0;
     }
 
     @Override
     public void setBurnTime(ItemStack stack, int burnTime) {
-        stack.set(InvGensDataComponents.GENERATOR_BURN_TIME, burnTime);
+        if (stack.getTag() != null) {
+            if (stack.getTag().contains("burnTime")) {
+                stack.getTag().putInt("burnTime", burnTime);
+            }
+        } else {
+            CompoundTag compoundTag = new CompoundTag();
+            compoundTag.putInt("burnTime", burnTime);
+            stack.setTag(compoundTag);
+        }
     }
 
     public ItemStack getCurrentFuel(ItemStack stack) {
-        var itemHandler = stack.getCapability(Capabilities.ItemHandler.ITEM);
-        if (itemHandler != null) {
-            return itemHandler.getStackInSlot(4);
-        }
-        return ItemStack.EMPTY;
+        return stack.getCapability(ForgeCapabilities.ITEM_HANDLER)
+                .map(iItemHandler -> iItemHandler.getStackInSlot(4).copy())
+                .orElse(ItemStack.EMPTY);
     }
 
     public void setCurrentFuel(ItemStack stack, ItemStack fuel) {
-        var itemHandler = stack.getCapability(Capabilities.ItemHandler.ITEM);
-        if (itemHandler instanceof ComponentItemHandler componentItemHandler) {
-            componentItemHandler.setStackInSlot(4, fuel);
-        }
+        LazyOptional<IItemHandler> lazyOptional = stack.getCapability(ForgeCapabilities.ITEM_HANDLER);
+        lazyOptional.ifPresent(iItemHandler -> {
+            if (iItemHandler instanceof IItemHandlerModifiable modifiable) {
+                modifiable.setStackInSlot(4, fuel);
+            }
+        });
     }
 
     @Override
-    public ItemStack getFuel(ItemStack stack, Level level) {
-        var itemHandler = stack.getCapability(Capabilities.ItemHandler.ITEM);
-        if (itemHandler != null) {
-            ItemStack fuelStack = itemHandler.getStackInSlot(0);
-            return isItemValid(stack, fuelStack, level) ? fuelStack : ItemStack.EMPTY;
-        }
-        return ItemStack.EMPTY;
+    public ItemStack getFuelSlotStack(ItemStack stack, Level level) {
+        return stack.getCapability(ForgeCapabilities.ITEM_HANDLER)
+                .map(iItemHandler -> {
+                    ItemStack fuel = iItemHandler.getStackInSlot(0).copy();
+                    return isItemValid(stack, fuel, level) ? fuel : ItemStack.EMPTY;
+                })
+                .orElse(ItemStack.EMPTY);
     }
 
     @Override
@@ -436,7 +508,14 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         if (!simulate) {
             int stored = this.getInternalEnergyStored(container);
             stored -= energyExtracted;
-            container.set(InvGensDataComponents.FORGE_ENERGY, stored);
+            CompoundTag tag = container.getTag();
+            if (tag != null) {
+                tag.putInt("energy", stored);
+            } else {
+                tag = new CompoundTag();
+                tag.putInt("energy", stored);
+                container.setTag(tag);
+            }
         }
         return energyExtracted;
     }

@@ -1,27 +1,31 @@
 package com.kjmaster.inventorygenerators.recipe;
 
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.NotNull;
 
-public record GeneratorRecipeInput(ItemStack generator, ItemStack fuel) implements RecipeInput {
+public record GeneratorRecipeInput(ItemStack generator, ItemStack fuel) implements Container {
 
-    public @NotNull ItemStack getItem(int p_346205_) {
-        ItemStack var10000;
-        switch (p_346205_) {
-            case 0 -> var10000 = this.generator;
-            case 1 -> var10000 = this.fuel;
-            default -> throw new IllegalArgumentException("Recipe does not contain slot " + p_346205_);
-        }
-        return var10000;
-    }
-
-    public int size() {
+    @Override
+    public int getContainerSize() {
         return 2;
     }
 
+    @Override
     public boolean isEmpty() {
         return this.generator.isEmpty() && this.fuel.isEmpty();
+    }
+
+    @Override
+    public @NotNull ItemStack getItem(int i) {
+        ItemStack itemStack;
+        switch (i) {
+            case 0 -> itemStack = this.generator;
+            case 1 -> itemStack = this.fuel;
+            default -> throw new IllegalArgumentException("Recipe does not contain slot " + i);
+        }
+        return itemStack;
     }
 
     public ItemStack generator() {
@@ -30,5 +34,36 @@ public record GeneratorRecipeInput(ItemStack generator, ItemStack fuel) implemen
 
     public ItemStack fuel() {
         return this.fuel;
+    }
+
+    @Override
+    public ItemStack removeItem(int i, int i1) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int i) {
+        return null;
+    }
+
+    @Override
+    public void setItem(int i, ItemStack itemStack) {
+
+    }
+
+    @Override
+    public void setChanged() {
+
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return false;
+    }
+
+
+    @Override
+    public void clearContent() {
+
     }
 }

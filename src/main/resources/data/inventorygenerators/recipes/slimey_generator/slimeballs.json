@@ -1,0 +1,13 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_slimey_generator"
+  },
+  "fuels": [
+    {
+      "tag": "forge:slimeballs"
+    }
+  ],
+  "burnTime": 20,
+  "RF": 40
+}

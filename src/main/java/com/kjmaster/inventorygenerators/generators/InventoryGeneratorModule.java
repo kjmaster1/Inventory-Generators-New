@@ -1,15 +1,20 @@
 package com.kjmaster.inventorygenerators.generators;
 
-import com.kjmaster.inventorygenerators.curios.CuriosIntegration;
+import com.kjmaster.inventorygenerators.compat.curios.CuriosIntegration;
 import com.kjmaster.inventorygenerators.setup.ClientSetup;
 import com.kjmaster.inventorygenerators.setup.Registration;
+import mcjty.lib.datagen.DataGen;
+import mcjty.lib.datagen.Dob;
 import mcjty.lib.modules.IModule;
 import mcjty.lib.setup.DeferredItem;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -37,14 +42,8 @@ public class InventoryGeneratorModule implements IModule {
 
     public static final Supplier<MenuType<InventoryGeneratorContainer>> CONTAINER_INVENTORY_GENERATOR = Registration.CONTAINERS.register("inventory_generator", InventoryGeneratorModule::createContainer);
 
-    public InventoryGeneratorModule(IEventBus bus, Dist dist) {
-        if (dist.isClient()) {
-            bus.addListener(this::registerScreens);
-        }
-    }
-
     private static MenuType<InventoryGeneratorContainer> createContainer() {
-        return IMenuTypeExtension.create((windowId, inv, data) -> {
+        return IForgeMenuType.create((windowId, inv, data) -> {
             Player player = inv.player;
             ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
             InventoryGeneratorContainer container = new InventoryGeneratorContainer(windowId, player.blockPosition(), player, stack);
@@ -61,6 +60,7 @@ public class InventoryGeneratorModule implements IModule {
     @Override
     public void initClient(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            InventoryGeneratorGui.register();
             ClientSetup.initOverrides(INVENTORY_CULINARY_GENERATOR.get());
             ClientSetup.initOverrides(INVENTORY_DEATH_GENERATOR.get());
             ClientSetup.initOverrides(INVENTORY_END_GENERATOR.get());
@@ -87,7 +87,96 @@ public class InventoryGeneratorModule implements IModule {
 
     }
 
-    public void registerScreens(RegisterMenuScreensEvent event) {
-        InventoryGeneratorGui.register(event);
+    @Override
+    public void initDatagen(DataGen dataGen) {
+        dataGen.add(
+                Dob.itemBuilder(INVENTORY_CULINARY_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('w', Tags.Items.CROPS_WHEAT)
+                                .define('z', Items.COOKED_PORKCHOP)
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "www", "wzw", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_DEATH_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('z', Tags.Items.BONES)
+                                .define('s', Items.SPIDER_EYE)
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "zzz", "zsz", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_END_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "ooo", "oOo", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_EXPLOSIVE_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('g', Tags.Items.GUNPOWDER)
+                                .define('t', Items.TNT)
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "ggg", "gtg", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_FROSTY_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('z', Items.ICE)
+                                .define('s', Items.SNOWBALL)
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "sss", "szs", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_FURNACE_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('s', INVENTORY_SURVIVALIST_GENERATOR.get())
+                                .define('f', Items.FURNACE)
+                                .unlockedBy("has_survivalist_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_SURVIVALIST_GENERATOR.get())),
+                        "iii", "isi", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_HALITOSIS_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('z', Items.PURPUR_BLOCK)
+                                .define('y', Items.END_ROD)
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "zzz", "zyz", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_NETHER_STAR_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('w', Items.WITHER_SKELETON_SKULL)
+                                .define('n', Tags.Items.NETHER_STARS)
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "www", "wnw", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_OVERCLOCKED_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('l', Tags.Items.GEMS_LAPIS)
+                                .define('g', Tags.Items.STORAGE_BLOCKS_GOLD)
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "lll", "lgl", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_PINK_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('z', Items.PINK_WOOL)
+                                .define('y', Tags.Items.DYES_PINK)
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "zzz", "zyz", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_POTION_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('z', Tags.Items.RODS_BLAZE)
+                                .define('s', Items.BREWING_STAND)
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "zzz", "zsz", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_SLIMEY_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('z', Items.SLIME_BLOCK)
+                                .define('s', Tags.Items.SLIMEBALLS)
+                                .define('f', INVENTORY_FURNACE_GENERATOR.get())
+                                .unlockedBy("has_furnace_generator", InventoryChangeTrigger.TriggerInstance.hasItems(INVENTORY_FURNACE_GENERATOR.get())),
+                        "sss", "szs", "rfr"
+                ),
+                Dob.itemBuilder(INVENTORY_SURVIVALIST_GENERATOR).shaped(shapedRecipeBuilder -> shapedRecipeBuilder
+                                .define('s', Tags.Items.COBBLESTONE_NORMAL)
+                                .define('f', Items.FURNACE)
+                                .unlockedBy("has_furnace", InventoryChangeTrigger.TriggerInstance.hasItems(Items.FURNACE)),
+                        "sss", "sis", "RfR"
+                )
+        );
     }
 }

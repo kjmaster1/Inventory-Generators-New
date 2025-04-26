@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "s": {
+      "item": "minecraft:brewing_stand"
+    },
+    "z": {
+      "tag": "forge:rods/blaze"
+    }
+  },
+  "pattern": [
+    "zzz",
+    "zsz",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_potion_generator"
+  },
+  "show_notification": true
+}

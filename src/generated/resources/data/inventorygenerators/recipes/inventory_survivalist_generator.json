@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "f": {
+      "item": "minecraft:furnace"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "s": {
+      "tag": "forge:cobblestone/normal"
+    }
+  },
+  "pattern": [
+    "sss",
+    "sis",
+    "RfR"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_survivalist_generator"
+  },
+  "show_notification": true
+}

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public interface IInventoryGenerator {
 
-    void giveDataComponents(ItemStack stack);
+    void giveNBT(ItemStack stack);
 
     boolean isItemValid(ItemStack generator, ItemStack fuel, Level level);
 
@@ -28,7 +28,9 @@ public interface IInventoryGenerator {
 
     void setBurnTime(ItemStack stack, int burnTime);
 
-    ItemStack getFuel(ItemStack stack, Level level);
+    ItemStack getFuelSlotStack(ItemStack stack, Level level);
+
+    ItemStack getCurrentFuel(ItemStack stack);
 
     void receiveInternalEnergy(ItemStack stack, int energy);
 

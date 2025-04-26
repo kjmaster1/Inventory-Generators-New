@@ -1,15 +1,16 @@
 package com.kjmaster.inventorygenerators.setup;
 
 import mcjty.lib.setup.DefaultModSetup;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class ModSetup extends DefaultModSetup {
 
     @Override
     public void init(FMLCommonSetupEvent e) {
         super.init(e);
-        NeoForge.EVENT_BUS.register(new ForgeEventHandlers());
+        MinecraftForge.EVENT_BUS.register(new ForgeEventHandlers());
+        InventoryGeneratorsBaseMessages.registerMessages();
     }
 
     @Override

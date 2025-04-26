@@ -1,45 +1,45 @@
 package com.kjmaster.inventorygenerators.setup;
 
 import com.kjmaster.inventorygenerators.InventoryGenerators;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
-@EventBusSubscriber(modid = InventoryGenerators.MODID, bus = EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = InventoryGenerators.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config {
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-    public static final ModConfigSpec SPEC;
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static final ForgeConfigSpec SPEC;
 
     static {
         init(BUILDER);
         SPEC = BUILDER.build();
     }
 
-    private static ModConfigSpec.BooleanValue DO_SIDE_EFFECTS;
-    private static ModConfigSpec.BooleanValue DO_SEND_ENERGY;
-    private static ModConfigSpec.IntValue CULINARY_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue DEATH_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue END_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue EXPLOSIVE_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue FROSTY_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue FURNACE_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue HALITOSIS_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue NETHER_STAR_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue OVERCLOCKED_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue PINK_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue POTION_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue SLIMEY_GENERATOR_CAPACITY;
-    private static ModConfigSpec.IntValue SURVIVALIST_GENERATOR_CAPACITY;
-    private static ModConfigSpec.DoubleValue FURNACE_GENERATOR_DIVISOR;
-    private static ModConfigSpec.IntValue FURNACE_GENERATOR_RF_PER_TICK;
-    private static ModConfigSpec.DoubleValue OVERCLOCKED_GENERATOR_DIVISOR;
-    private static ModConfigSpec.IntValue OVERCLOCKED_GENERATOR_MIN_RF_PER_TICK;
-    private static ModConfigSpec.IntValue SURVIVALIST_GENERATOR_RF_PER_TICK;
-    private static ModConfigSpec.IntValue EXPLOSIVE_GENERATOR_SIDE_EFFECT_PROBABILITY;
-    private static ModConfigSpec.IntValue EXPLOSION_DAMAGE_DIVISOR;
-    private static ModConfigSpec.IntValue WITHER_DURATION;
-    private static ModConfigSpec.IntValue WITHER_AMPLIFIER;
+    private static ForgeConfigSpec.BooleanValue DO_SIDE_EFFECTS;
+    private static ForgeConfigSpec.BooleanValue DO_SEND_ENERGY;
+    private static ForgeConfigSpec.IntValue CULINARY_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue DEATH_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue END_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue EXPLOSIVE_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue FROSTY_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue FURNACE_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue HALITOSIS_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue NETHER_STAR_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue OVERCLOCKED_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue PINK_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue POTION_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue SLIMEY_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.IntValue SURVIVALIST_GENERATOR_CAPACITY;
+    private static ForgeConfigSpec.DoubleValue FURNACE_GENERATOR_DIVISOR;
+    private static ForgeConfigSpec.IntValue FURNACE_GENERATOR_RF_PER_TICK;
+    private static ForgeConfigSpec.DoubleValue OVERCLOCKED_GENERATOR_DIVISOR;
+    private static ForgeConfigSpec.IntValue OVERCLOCKED_GENERATOR_MIN_RF_PER_TICK;
+    private static ForgeConfigSpec.IntValue SURVIVALIST_GENERATOR_RF_PER_TICK;
+    private static ForgeConfigSpec.IntValue EXPLOSIVE_GENERATOR_SIDE_EFFECT_PROBABILITY;
+    private static ForgeConfigSpec.IntValue EXPLOSION_DAMAGE_DIVISOR;
+    private static ForgeConfigSpec.IntValue WITHER_DURATION;
+    private static ForgeConfigSpec.IntValue WITHER_AMPLIFIER;
     public static boolean doSideEffects;
     public static boolean doSendEnergy;
 
@@ -69,7 +69,7 @@ public class Config {
     public static int witherDuration;
     public static int witherAmplifier;
 
-    public static void init(ModConfigSpec.Builder BUILDER) {
+    public static void init(ForgeConfigSpec.Builder BUILDER) {
         DO_SIDE_EFFECTS = BUILDER
                 .comment("Whether Inventory Generators have side effects or not")
                 .define("doSideEffects", true);

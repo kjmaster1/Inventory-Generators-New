@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "s": {
+      "item": "minecraft:snowball"
+    },
+    "z": {
+      "item": "minecraft:ice"
+    }
+  },
+  "pattern": [
+    "sss",
+    "szs",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_frosty_generator"
+  },
+  "show_notification": true
+}

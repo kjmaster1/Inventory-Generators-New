@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    },
+    "n": {
+      "tag": "forge:nether_stars"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "w": {
+      "item": "minecraft:wither_skeleton_skull"
+    }
+  },
+  "pattern": [
+    "www",
+    "wnw",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_nether_star_generator"
+  },
+  "show_notification": true
+}

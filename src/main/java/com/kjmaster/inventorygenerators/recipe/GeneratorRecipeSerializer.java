@@ -1,65 +1,64 @@
 package com.kjmaster.inventorygenerators.recipe;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.kjmaster.inventorygenerators.InventoryGenerators;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class GeneratorRecipeSerializer implements RecipeSerializer<GeneratorRecipe> {
 
-    private static final MapCodec<GeneratorRecipe> CODEC = RecordCodecBuilder.mapCodec(
-            builder -> builder.group(
-                            Ingredient.CODEC.listOf().fieldOf("fuels").orElse(List.of()).forGetter(GeneratorRecipe::fuels),
-                            Ingredient.CODEC.fieldOf("generator").forGetter(GeneratorRecipe::generator),
-                            Codec.INT.fieldOf("burnTime").forGetter(GeneratorRecipe::burnTime),
-                            Codec.INT.fieldOf("RF").forGetter(GeneratorRecipe::RF)
-                    )
-                    .apply(builder, GeneratorRecipe::new)
-    );
-
-    public final StreamCodec<RegistryFriendlyByteBuf, GeneratorRecipe> STREAM_CODEC = StreamCodec.of(
-            this::toNetwork, this::fromNetwork
-    );
-
     @Override
-    public MapCodec<GeneratorRecipe> codec() {
-        return CODEC;
+    public @NotNull GeneratorRecipe fromJson(@NotNull ResourceLocation resourceLocation, @NotNull JsonObject pJson) {
+
+        System.out.println("From JSON: " + resourceLocation);
+
+        JsonObject generatorObject = GsonHelper.getAsJsonObject(pJson, "generator");
+        Item item = GsonHelper.getAsItem(generatorObject, "item");
+        Ingredient generator = Ingredient.of(item);
+        JsonArray fuelsArray = GsonHelper.getAsJsonArray(pJson, "fuels");
+
+        ArrayList<Ingredient> fuels = new ArrayList<>();
+
+        fuelsArray.forEach(jsonElement -> {
+                    fuels.add(Ingredient.fromJson(jsonElement, false));
+                }
+        );
+
+        int burnTime = GsonHelper.getAsInt(pJson, "burnTime", 0);
+        int RF = GsonHelper.getAsInt(pJson, "RF", 0);
+
+        return new GeneratorRecipe(resourceLocation, fuels, generator, burnTime, RF);
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, GeneratorRecipe> streamCodec() {
-        return STREAM_CODEC;
-    }
-
-    public GeneratorRecipe fromNetwork(@Nonnull RegistryFriendlyByteBuf buffer) {
+    public @Nullable GeneratorRecipe fromNetwork(@NotNull ResourceLocation resourceLocation, @NotNull FriendlyByteBuf buffer) {
         try {
-            List<Ingredient> fuels = new ArrayList<>();
-            IntStream.range(0, buffer.readInt()).forEach(
-                    i -> fuels.add(Ingredient.CONTENTS_STREAM_CODEC.decode(buffer))
-            );
-            return new GeneratorRecipe(fuels, Ingredient.CONTENTS_STREAM_CODEC.decode(buffer), buffer.readInt(), buffer.readInt());
+            List<Ingredient> fuels = buffer.readList(Ingredient::fromNetwork);
+            Ingredient generator = Ingredient.fromNetwork(buffer);
+            int burnTime = buffer.readInt();
+            int RF = buffer.readInt();
+            return new GeneratorRecipe(resourceLocation, fuels, generator, burnTime, RF);
         } catch (Exception e) {
             InventoryGenerators.LOGGER.error("Error reading generator recipe from packet. ", e);
             throw e;
         }
     }
 
-    public void toNetwork(@Nonnull RegistryFriendlyByteBuf buffer, GeneratorRecipe recipe) {
+    @Override
+    public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull GeneratorRecipe recipe) {
         try {
-            buffer.writeInt(recipe.fuels().size());
-            recipe.fuels().forEach(fuel -> {
-                Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, fuel);
-            });
-            Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.generator());
+            buffer.writeCollection(recipe.fuels(), (buf, fuel) -> fuel.toNetwork(buf));
+            recipe.generator().toNetwork(buffer);
             buffer.writeInt(recipe.burnTime());
             buffer.writeInt(recipe.RF());
         } catch (Exception e) {

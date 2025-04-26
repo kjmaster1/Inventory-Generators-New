@@ -4,6 +4,7 @@ plugins {
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 version = mod_version
@@ -170,19 +171,19 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    implementation "curse.maven:mcjtylib-233105:5613231"
-    implementation "curse.maven:iron-jetpacks-284497:6033946"
-    implementation "curse.maven:cucumber-272335:5857370"
-    implementation "curse.maven:rftools-base-326041:6195123"
-    implementation "curse.maven:rftools-power-290209:5283901"
+    implementation fg.deobf("curse.maven:mcjtylib-233105:5613231")
+    implementation fg.deobf("curse.maven:iron-jetpacks-284497:6033946")
+    implementation fg.deobf("curse.maven:cucumber-272335:5857370")
+    implementation fg.deobf("curse.maven:rftools-base-326041:6195123")
+    implementation fg.deobf("curse.maven:rftools-power-290209:5283901")
 
-    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
-    compileOnly "mezz.jei:jei-${minecraft_version}-lib:${jei_version}"
-    compileOnly "mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"
-    runtimeOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-lib:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     if (curios_version.length() > 0) {
-        implementation "top.theillusivec4.curios:curios-forge:${curios_version}"
+        implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
     }
 
 }
@@ -197,7 +198,7 @@ tasks.named('processResources', ProcessResources).configure {
             forge_version: forge_version, forge_version_range: forge_version_range,
             loader_version_range: loader_version_range,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
+            mod_authors: mod_authors, mod_description: mod_description, mcjtylib_version_range: mcjtylib_version_range
     ]
     inputs.properties replaceProperties
 

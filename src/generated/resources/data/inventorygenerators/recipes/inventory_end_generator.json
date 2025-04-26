@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    },
+    "o": {
+      "tag": "forge:ender_pearls"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "ooo",
+    "oOo",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_end_generator"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "g": {
+      "tag": "forge:storage_blocks/gold"
+    },
+    "z": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "pattern": [
+    "gzg",
+    "RRR",
+    "RRR"
+  ],
+  "result": {
+    "item": "inventorygenerators:no_effect_upgrade"
+  },
+  "show_notification": true
+}

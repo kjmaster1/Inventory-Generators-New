@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "y": {
+      "tag": "forge:dyes/pink"
+    },
+    "z": {
+      "item": "minecraft:pink_wool"
+    }
+  },
+  "pattern": [
+    "zzz",
+    "zyz",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_pink_generator"
+  },
+  "show_notification": true
+}

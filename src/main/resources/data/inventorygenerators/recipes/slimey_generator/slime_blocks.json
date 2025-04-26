@@ -1,0 +1,16 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_slimey_generator"
+  },
+  "fuels": [
+    {
+      "tag": "forge:storage_blocks/slime"
+    },
+    {
+      "item": "minecraft:slime_block"
+    }
+  ],
+  "burnTime": 20,
+  "RF": 360
+}

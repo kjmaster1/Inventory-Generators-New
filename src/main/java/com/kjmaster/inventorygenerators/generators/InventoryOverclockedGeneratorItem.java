@@ -1,7 +1,9 @@
 package com.kjmaster.inventorygenerators.generators;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeHooks;
 
 import static com.kjmaster.inventorygenerators.setup.Config.*;
 
@@ -18,19 +20,19 @@ public class InventoryOverclockedGeneratorItem extends InventoryGeneratorItem {
 
     @Override
     public boolean isItemValid(ItemStack generator, ItemStack fuel, Level level) {
-        return fuel.getBurnTime(null) > 0 || super.isItemValid(generator, fuel, level);
+        return ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING) > 0 || super.isItemValid(generator, fuel, level);
     }
 
     @Override
     public int calculateTime(ItemStack generator, ItemStack fuel, Level level) {
-        return fuel.getBurnTime(null) > 0 ?
-                (int) Math.ceil(fuel.getBurnTime(null) / overclockedGeneratorDivisor) + 1 : super.calculateTime(generator, fuel, level);
+        return ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING) > 0 ?
+                (int) Math.ceil(ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING) / overclockedGeneratorDivisor) + 1 : super.calculateTime(generator, fuel, level);
     }
 
     @Override
     public int calculatePower(ItemStack generator, Level level) {
-        if (getCurrentFuel(generator).getBurnTime(null) > 0) {
-            int burnTime = getCurrentFuel(generator).getBurnTime(null);
+        if (ForgeHooks.getBurnTime(getCurrentFuel(generator), RecipeType.SMELTING) > 0) {
+            int burnTime = ForgeHooks.getBurnTime(getCurrentFuel(generator), RecipeType.SMELTING);
             int minSend = Math.min(burnTime, overclockedGeneratorMinRfPerTick);
             return Math.min(getMaxEnergyStored(generator) - getInternalEnergyStored(generator), minSend);
         }

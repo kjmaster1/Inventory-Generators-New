@@ -3,31 +3,34 @@ package com.kjmaster.inventorygenerators.setup;
 import com.kjmaster.inventorygenerators.InventoryGenerators;
 import com.kjmaster.inventorygenerators.network.PacketChangeMode;
 import com.kjmaster.inventorygenerators.network.PacketSyncGeneratorEnergy;
+import mcjty.lib.network.CustomPacketPayload;
+import mcjty.lib.network.IPayloadRegistrar;
+import mcjty.lib.network.Networking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraftforge.network.NetworkDirection;
 
 public class InventoryGeneratorsBaseMessages {
 
-    public static void registerMessages(RegisterPayloadHandlersEvent event) {
+    private static IPayloadRegistrar registrar;
 
-        final PayloadRegistrar registrar = event.registrar(InventoryGenerators.MODID)
+    public static void registerMessages() {
+
+        registrar = Networking.registrar(InventoryGenerators.MODID)
                 .versioned("1.0")
                 .optional();
-        registrar.playToServer(PacketChangeMode.TYPE, PacketChangeMode.CODEC, PacketChangeMode::handle);
-        registrar.playToClient(PacketSyncGeneratorEnergy.TYPE, PacketSyncGeneratorEnergy.CODEC, PacketSyncGeneratorEnergy::handle);
+
+        registrar.play(PacketChangeMode.class, PacketChangeMode::create, handler -> handler.server(PacketChangeMode::handle));
+        registrar.play(PacketSyncGeneratorEnergy.class, PacketSyncGeneratorEnergy::create, handler -> handler.client(PacketSyncGeneratorEnergy::handle));
     }
 
     public static <T extends CustomPacketPayload> void sendToPlayer(T packet, Player player) {
-        PacketDistributor.sendToPlayer((ServerPlayer) player, packet);
+        registrar.getChannel().sendTo(packet, ((ServerPlayer) player).connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T packet) {
         if (Minecraft.getInstance().getConnection() == null) return;
-        PacketDistributor.sendToServer(packet);
+        registrar.getChannel().sendToServer(packet);
     }
 }

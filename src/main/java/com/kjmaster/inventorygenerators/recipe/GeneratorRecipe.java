@@ -1,17 +1,17 @@
 package com.kjmaster.inventorygenerators.recipe;
 
 import com.kjmaster.inventorygenerators.setup.Registration;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record GeneratorRecipe(List<Ingredient> fuels, Ingredient generator, int burnTime,
+
+public record GeneratorRecipe(ResourceLocation id, List<Ingredient> fuels, Ingredient generator, int burnTime,
                               int RF) implements Recipe<GeneratorRecipeInput> {
 
     @Override
@@ -27,8 +27,8 @@ public record GeneratorRecipe(List<Ingredient> fuels, Ingredient generator, int 
     }
 
     @Override
-    public ItemStack assemble(GeneratorRecipeInput generatorRecipeInput, HolderLookup.Provider provider) {
-        return null;
+    public @NotNull ItemStack assemble(@NotNull GeneratorRecipeInput generatorRecipeInput, @NotNull RegistryAccess registryAccess) {
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -37,17 +37,22 @@ public record GeneratorRecipe(List<Ingredient> fuels, Ingredient generator, int 
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
-        return null;
+    public @NotNull ItemStack getResultItem(@NotNull RegistryAccess registryAccess) {
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return Registration.GENERATOR_RECIPE_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public @NotNull RecipeType<?> getType() {
         return Registration.GENERATOR_RECIPE_TYPE.get();
+    }
+
+    @Override
+    public @NotNull ResourceLocation getId() {
+        return this.id;
     }
 }

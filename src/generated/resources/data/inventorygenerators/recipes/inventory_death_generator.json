@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "s": {
+      "item": "minecraft:spider_eye"
+    },
+    "z": {
+      "tag": "forge:bones"
+    }
+  },
+  "pattern": [
+    "zzz",
+    "zsz",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_death_generator"
+  },
+  "show_notification": true
+}

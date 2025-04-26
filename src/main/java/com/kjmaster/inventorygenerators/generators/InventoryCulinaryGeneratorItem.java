@@ -1,5 +1,6 @@
 package com.kjmaster.inventorygenerators.generators;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -74,34 +75,38 @@ public class InventoryCulinaryGeneratorItem extends InventoryGeneratorItem {
     }
 
     public static int getHealAmount(FoodProperties food) {
-        float healAmount = food.nutrition();
-        for (FoodProperties.PossibleEffect possibleEffect : food.effects()) {
-            MobEffectInstance effectInstance = possibleEffect.effect();
-            MobEffect mobEffect = effectInstance.getEffect().value();
+        float healAmount = (float)food.getNutrition();
+
+        for(Pair<MobEffectInstance, Float> pair : food.getEffects()) {
+            MobEffectInstance effectInstance = (MobEffectInstance)pair.getFirst();
+            MobEffect mobEffect = effectInstance.getEffect();
             if (mobEffect == MobEffects.HEAL) {
-                healAmount += Math.min(4 << effectInstance.getAmplifier(), 20);
+                healAmount += (float)Math.min(4 << effectInstance.getAmplifier(), 20);
             } else if (mobEffect == MobEffects.SATURATION) {
-                healAmount += (effectInstance.getAmplifier() + 1) / 2F;
+                healAmount += (float)(effectInstance.getAmplifier() + 1) / 2.0F;
             } else if (mobEffect == MobEffects.REGENERATION) {
-                healAmount += effectInstance.getDuration() / (float) (50 >> effectInstance.getAmplifier()) / 4F;
+                healAmount += (float)effectInstance.getDuration() / (float)(50 >> effectInstance.getAmplifier()) / 4.0F;
             } else if (mobEffect == MobEffects.ABSORPTION) {
-                healAmount += (effectInstance.getAmplifier() + 1) / 2F;
+                healAmount += (float)(effectInstance.getAmplifier() + 1) / 2.0F;
             } else {
-                healAmount += 1;
+                ++healAmount;
             }
         }
-        return (int) (healAmount + 0.5f);
+
+        return (int)(healAmount + 0.5F);
     }
 
     public static float getSaturationModifier(FoodProperties food) {
-        float saturationModifier = food.saturation();
-        for (FoodProperties.PossibleEffect possibleEffect : food.effects()) {
-            MobEffectInstance effectInstance = possibleEffect.effect();
-            MobEffect mobEffect = effectInstance.getEffect().value();
+        float saturationModifier = food.getSaturationModifier();
+
+        for(Pair<MobEffectInstance, Float> pair : food.getEffects()) {
+            MobEffectInstance effectInstance = (MobEffectInstance)pair.getFirst();
+            MobEffect mobEffect = effectInstance.getEffect();
             if (mobEffect == MobEffects.SATURATION) {
-                saturationModifier = Math.max(1F, saturationModifier);
+                saturationModifier = Math.max(1.0F, saturationModifier);
             }
         }
+
         return saturationModifier;
     }
 }

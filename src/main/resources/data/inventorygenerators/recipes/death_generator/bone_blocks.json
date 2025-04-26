@@ -1,0 +1,16 @@
+{
+  "type": "inventorygenerators:generator_recipe",
+  "generator": {
+    "item": "inventorygenerators:inventory_death_generator"
+  },
+  "fuels": [
+    {
+      "tag": "forge:storage_blocks/bone_meal"
+    },
+    {
+      "item": "minecraft:bone_block"
+    }
+  ],
+  "burnTime": 400,
+  "RF": 120
+}

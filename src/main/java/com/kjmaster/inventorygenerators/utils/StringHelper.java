@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
@@ -25,7 +25,7 @@ import static com.kjmaster.inventorygenerators.InventoryGenerators.MODID;
  *
  * @author King Lemming
  * <p>
- * This class is used in KJLib under the 'CoFH "Don't Be a Jerk" License' which can be found here https://goo.gl/QsbhBa
+ * This class is used in Inventory Generators under the 'CoFH "Don't Be a Jerk" License' which can be found here https://goo.gl/QsbhBa
  * The license states 'You CAN... Copy portions of this code for use in other projects.'
  */
 
@@ -50,7 +50,7 @@ public final class StringHelper {
 
     public static MutableComponent getNoticeText(String key) {
         MutableComponent mutableComponent = getTextComponent(key);
-        mutableComponent = mutableComponent.setStyle(Style.EMPTY.withColor(TextColor.parseColor("#fc9d03").getOrThrow()));
+        mutableComponent = mutableComponent.setStyle(Style.EMPTY.withColor(TextColor.parseColor("#fc9d03")));
         return mutableComponent;
     }
 
@@ -61,7 +61,7 @@ public final class StringHelper {
 
     public static MutableComponent getActivationText(String key) {
         MutableComponent mutableComponent = getTextComponent(key);
-        mutableComponent = mutableComponent.setStyle(Style.EMPTY.withColor(TextColor.parseColor("#03a1fc").getOrThrow()));
+        mutableComponent = mutableComponent.setStyle(Style.EMPTY.withColor(TextColor.parseColor("#03a1fc")));
         return mutableComponent;
     }
 
@@ -121,12 +121,12 @@ public final class StringHelper {
 
     public static String toJSON(Component chatComponent, HolderLookup.Provider registries) {
 
-        return Component.Serializer.toJson(chatComponent, registries);
+        return Component.Serializer.toJson(chatComponent);
     }
 
     public static MutableComponent fromJSON(String string, HolderLookup.Provider registries) {
 
-        return Component.Serializer.fromJsonLenient(string, registries);
+        return Component.Serializer.fromJsonLenient(string);
     }
 
     public static MutableComponent getEmptyLine() {

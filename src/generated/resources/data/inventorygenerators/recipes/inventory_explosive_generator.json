@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "f": {
+      "item": "inventorygenerators:inventory_furnace_generator"
+    },
+    "g": {
+      "tag": "forge:gunpowder"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "t": {
+      "item": "minecraft:tnt"
+    }
+  },
+  "pattern": [
+    "ggg",
+    "gtg",
+    "rfr"
+  ],
+  "result": {
+    "item": "inventorygenerators:inventory_explosive_generator"
+  },
+  "show_notification": true
+}

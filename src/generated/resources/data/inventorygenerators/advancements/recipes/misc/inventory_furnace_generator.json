@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_survivalist_generator": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "inventorygenerators:inventory_survivalist_generator"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "inventorygenerators:inventory_furnace_generator"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_survivalist_generator",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "inventorygenerators:inventory_furnace_generator"
+    ]
+  },
+  "sends_telemetry_event": false
+}
