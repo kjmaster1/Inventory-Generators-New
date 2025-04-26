@@ -36,6 +36,8 @@ public interface IInventoryGenerator {
 
     int getInternalEnergyStored(ItemStack stack);
 
+    int getMaxEnergyStored(ItemStack stack);
+
     ArrayList<ItemStack> getChargeables(Player player);
 
     void giveEnergyToChargeables(ArrayList<ItemStack> chargeables, ItemStack stack);

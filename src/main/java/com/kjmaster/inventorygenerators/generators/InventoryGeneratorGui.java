@@ -14,7 +14,6 @@ import mcjty.lib.gui.widgets.Panel;
 import mcjty.lib.gui.widgets.Widgets;
 import mcjty.lib.tileentity.GenericTileEntity;
 import mcjty.lib.typed.TypedMap;
-import mcjty.lib.varia.IEnergyItem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.network.chat.Component;
@@ -36,7 +35,7 @@ public class InventoryGeneratorGui extends GenericGuiContainer<GenericTileEntity
     private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(InventoryGenerators.MODID, "textures/gui/container/generator.png");
 
     private final Component displayName;
-    private final InventoryGeneratorContainer container;
+    public final InventoryGeneratorContainer container;
     public EnergyBar energyBar;
 
     public InventoryGeneratorGui(Component textComponent, InventoryGeneratorContainer container, Inventory inventory) {
@@ -98,11 +97,11 @@ public class InventoryGeneratorGui extends GenericGuiContainer<GenericTileEntity
     }
 
     @Override
-    protected void updateEnergyBar(EnergyBar energyBar) {
+    public void updateEnergyBar(EnergyBar energyBar) {
         ItemStack stack = container.getStack();
         Item item = stack.getItem();
-        if (item instanceof IEnergyItem iEnergyItem) {
-            energyBar.maxValue(iEnergyItem.getMaxEnergyStored(stack));
+        if (item instanceof IInventoryGenerator iInventoryGenerator) {
+            energyBar.maxValue(iInventoryGenerator.getMaxEnergyStored(stack));
         }
     }
 

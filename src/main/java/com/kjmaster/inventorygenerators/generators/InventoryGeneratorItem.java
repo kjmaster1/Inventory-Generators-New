@@ -34,6 +34,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -42,15 +43,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static com.kjmaster.inventorygenerators.setup.Config.doSendEnergy;
 import static com.kjmaster.inventorygenerators.setup.Config.doSideEffects;
 
 public abstract class InventoryGeneratorItem extends BaseItem implements IInventoryGenerator, IEnergyItem {
+
+
+    private static final String UUID_TAG = "GeneratorUUID";
 
     final String generatorName;
     private RecipeManager.CachedCheck<GeneratorRecipeInput, ? extends GeneratorRecipe> quickCheck;
@@ -113,6 +114,22 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
                 StringHelper.format(burnTime)));
     }
 
+    public static UUID getOrCreateUUID(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        if (!tag.hasUUID(UUID_TAG)) {
+            tag.putUUID(UUID_TAG, UUID.randomUUID());
+        }
+        return tag.getUUID(UUID_TAG);
+    }
+
+    public static UUID getUUID(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag != null && tag.hasUUID(UUID_TAG)) {
+            return tag.getUUID(UUID_TAG);
+        }
+        return null;
+    }
+
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int pSlotId, boolean pIsSelected) {
         super.inventoryTick(stack, level, entity, pSlotId, pIsSelected);
@@ -170,9 +187,23 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         if (inv instanceof IItemHandlerModifiable componentItemHandler) {
             if (fuel.getItem() instanceof PotionItem && fuel.getCount() == 1) {
                 componentItemHandler.setStackInSlot(0, new ItemStack(Items.GLASS_BOTTLE));
-            } else if (fuel.getItem() == Items.LAVA_BUCKET || fuel.getItem() == Items.WATER_BUCKET || fuel.getItem() == Items.POWDER_SNOW_BUCKET) {
+            } else if (fuel.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent()) {
+                fuel.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(iFluidHandlerItem -> {
+                    iFluidHandlerItem.drain(1000, IFluidHandler.FluidAction.EXECUTE);
+                    boolean allEmpty = true;
+                    for (int i = 0; i < iFluidHandlerItem.getTanks(); i++) {
+                        if (!iFluidHandlerItem.getFluidInTank(i).isEmpty()) {
+                            allEmpty = false;
+                        }
+                    }
+                    if (allEmpty) {
+                        componentItemHandler.setStackInSlot(0, iFluidHandlerItem.getContainer());
+                    }
+                });
+            } else if (fuel.is(Items.POWDER_SNOW_BUCKET)) {
                 componentItemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET));
-            } else {
+            }
+            else {
                 ItemStack fuelShrink = fuel.copy();
                 fuelShrink.shrink(1);
                 componentItemHandler.setStackInSlot(0, fuelShrink);
@@ -221,7 +252,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
 
     protected void sendSyncPacket(@NotNull ItemStack stack, Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
-            InventoryGeneratorsBaseMessages.sendToPlayer(PacketSyncGeneratorEnergy.create(getInternalEnergyStored(stack)), serverPlayer);
+            InventoryGeneratorsBaseMessages.sendToPlayer(PacketSyncGeneratorEnergy.create(getInternalEnergyStored(stack), getOrCreateUUID(stack)), serverPlayer);
         }
     }
 
