@@ -31,7 +31,7 @@ public class InventoryGeneratorGui extends GenericGuiContainer<GenericTileEntity
     private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(InventoryGenerators.MODID, "textures/gui/container/generator.png");
 
     private final Component displayName;
-    private final InventoryGeneratorContainer container;
+    public final InventoryGeneratorContainer container;
     public EnergyBar energyBar;
 
     public InventoryGeneratorGui(Component textComponent, InventoryGeneratorContainer container, Inventory inventory) {

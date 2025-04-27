@@ -39,10 +39,7 @@ import net.neoforged.neoforge.items.wrapper.PlayerInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static com.kjmaster.inventorygenerators.setup.Config.doSendEnergy;
 import static com.kjmaster.inventorygenerators.setup.Config.doSideEffects;
@@ -56,6 +53,10 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
         super(new Item.Properties()
                 .stacksTo(1));
         this.generatorName = generatorName;
+    }
+
+    public static UUID getOrCreateUUID(ItemStack stack) {
+        return stack.getOrDefault(InvGensDataComponents.GENERATOR_UUID, UUID.randomUUID());
     }
 
     @Override
@@ -173,9 +174,9 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
                 if (allEmpty) {
                     componentItemHandler.setStackInSlot(0, iFluidHandlerItem.getContainer());
                 }
-//            }
-//            else if (fuel.getItem() == Items.LAVA_BUCKET || fuel.getItem() == Items.WATER_BUCKET || fuel.getItem() == Items.POWDER_SNOW_BUCKET) {
-//                componentItemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET));
+            }
+            else if (fuel.getItem() == Items.POWDER_SNOW_BUCKET) {
+                componentItemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET));
             } else {
                 ItemStack fuelShrink = fuel.copy();
                 fuelShrink.shrink(1);
@@ -225,7 +226,7 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
 
     protected void sendSyncPacket(@NotNull ItemStack stack, Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
-            InventoryGeneratorsBaseMessages.sendToPlayer(PacketSyncGeneratorEnergy.create(getInternalEnergyStored(stack)), serverPlayer);
+            InventoryGeneratorsBaseMessages.sendToPlayer(PacketSyncGeneratorEnergy.create(getInternalEnergyStored(stack), getOrCreateUUID(stack)), serverPlayer);
         }
     }
 

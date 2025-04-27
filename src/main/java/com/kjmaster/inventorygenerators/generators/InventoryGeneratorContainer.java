@@ -13,6 +13,8 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 import static com.kjmaster.inventorygenerators.generators.InventoryGeneratorModule.CONTAINER_INVENTORY_GENERATOR;
 import static com.kjmaster.inventorygenerators.upgrades.UpgradesModule.*;
 import static mcjty.lib.container.ContainerFactory.CONTAINER_CONTAINER;
@@ -26,10 +28,12 @@ public class InventoryGeneratorContainer extends GenericContainer {
             .slot(SlotDefinition.specific(NO_EFFECT_UPGRADE.asItem()), 3, 44, 53)
             .playerSlots(8, 84));
     private final ItemStack stack;
+    private final UUID itemUUID;
 
     public InventoryGeneratorContainer(int id, BlockPos pos, @NotNull Player player, ItemStack stack) {
         super(CONTAINER_INVENTORY_GENERATOR.get(), id, CONTAINER_FACTORY.get(), pos, null, player);
         this.stack = stack;
+        this.itemUUID = InventoryGeneratorItem.getOrCreateUUID(stack);
 
     }
 
@@ -47,5 +51,9 @@ public class InventoryGeneratorContainer extends GenericContainer {
 
     public ItemStack getStack() {
         return stack;
+    }
+
+    public UUID getItemUUID() {
+        return itemUUID;
     }
 }
