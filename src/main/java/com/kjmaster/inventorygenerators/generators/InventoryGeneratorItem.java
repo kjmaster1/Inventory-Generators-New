@@ -56,7 +56,11 @@ public abstract class InventoryGeneratorItem extends BaseItem implements IInvent
     }
 
     public static UUID getOrCreateUUID(ItemStack stack) {
-        return stack.getOrDefault(InvGensDataComponents.GENERATOR_UUID, UUID.randomUUID());
+        UUID uuid = stack.get(InvGensDataComponents.GENERATOR_UUID);
+        if (uuid == null) {
+            stack.set(InvGensDataComponents.GENERATOR_UUID, UUID.randomUUID());
+        }
+        return stack.get(InvGensDataComponents.GENERATOR_UUID);
     }
 
     @Override
